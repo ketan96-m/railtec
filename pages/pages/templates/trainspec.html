@@ -1,0 +1,106 @@
+
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<section class="home-section">
+	<title>Train Specifications</title>
+      <h1> Train Specifications </h1>
+          <div class="container" style="margin-left:30px;margin-right:30px;width:auto;font-size:20px;">
+          	<br>
+          <p>Please Enter Train Details Here<p>
+          </div>
+          
+		<head>
+			    <meta charset="UTF-8"> 
+			    	<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+			    <!-- Boxicons CDN Link -->
+			    	<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+			    	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+			     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<style>
+					table {
+					width: 60%;
+					color: #6185d4;
+					font-family: sans-serif;
+					font-size: 18px;
+					text-align: center;
+					}
+					th {
+					background-color: #000000;
+					color: white;
+					}
+					tr:nth-child(even) {background-color: #f2f2f2}
+				</style>
+		</head>
+</br>
+
+<body>
+<br>
+
+<div class = "row">
+	<div class = "col">
+		<div class = "card card-subtitle mb-2 text-muted">
+			<form method="GET" >
+				{{myFilter.form}}
+				<button class = "btn btn-primary" type="submit">
+				Search</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+</br></br></br></br></br></br>
+
+<div class="row">
+	<div class = "col-md">
+		<div class = "card card-body">
+			<table>
+				<tr>
+					<th>Train Date</th>
+					<th>V1N</th>
+					<th>V1S</th>
+					<th>L1N</th>
+					<th>L1S</th>
+					<th>V3N</th>
+					<th>V3S</th>
+					<th>Speed</th>
+					<th>Vehicle Type</th>
+				</tr>
+
+				{% for traindata in train_data %}
+				<tr>
+					<td>{{traindata.tr_id}}</td>
+					<td>{{traindata.v1n}}</td>
+					<td>{{traindata.v1s}}</td>
+					<td>{{traindata.l1n}}</td>
+					<td>{{traindata.l1s}}</td>
+					<td>{{traindata.v3n}}</td>
+					<td>{{traindata.v3s}}</td>
+					<td>{{traindata.speed}}</td>
+					<td>{{traindata.carloc}}</td>
+				</tr>
+
+				{% endfor %}	
+
+			</table>
+		</div>
+	</div>
+</div>
+	
+<div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus icon'></i>
+    <div class="logo_name">RailTEC</div>
+      <i class='bx bx-menu' id="btn"></i>
+	</div>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+
+</section>
+</body>
+</html>
+
+{% endblock content %}
