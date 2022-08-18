@@ -71,17 +71,55 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Metratr116',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-		('tr_id', models.IntegerField()),
-                ('v1n', models.CharField(db_column='V1N', max_length=255)),
-                ('v1s', models.CharField(db_column='V1S', max_length=255)),
-                ('l1n', models.CharField(db_column='L1N', max_length=255)),
-                ('l1s', models.CharField(db_column='L1S', max_length=255)),
-                ('v3n', models.CharField(db_column='V3N', max_length=255)),
-                ('v3s', models.CharField(db_column='V3S', max_length=255)),
-                ('v3n_prot', models.CharField(db_column='V3N Prot', max_length=255)),
-                ('trigger', models.CharField(db_column='Trigger', max_length=255)),
-                ('speed', models.CharField(blank=True, db_column='Speed', max_length=255, null=True)),
+		('id', models.IntegerField(primary_key=True)),
+             	('tr_id', models.CharField(db_column='TrainDateTime', max_length=255, default = "")),
+                ('v1n', models.DecimalField(db_column='V1N_pks', max_digits=4, decimal_places=2)),
+                ('v1s', models.DecimalField(db_column='V1S_pks', max_digits=4, decimal_places=2)),
+                ('l1n', models.DecimalField(db_column='L1N_pks', max_digits=4, decimal_places=2)),
+                ('l1s', models.DecimalField(db_column='L1S_pks', max_digits=4, decimal_places=2)),
+                ('v3n', models.DecimalField(db_column='V3N_pks', max_digits=4, decimal_places=2)),
+                ('v3s', models.DecimalField(db_column='V3S_pks', max_digits=4, decimal_places=2)),
+                ('v3n_prot', models.DecimalField(db_column='V3N Prot', max_digits=4, decimal_places=2)),
+                ('carloc', models.CharField(db_column='carOrLoc', max_length=255)),
+                ('speed', models.DecimalField(blank=True, db_column='Speed', max_digits=4, decimal_places=2, null=True)),
+            ],
+        ),
+	migrations.CreateModel(
+            name='Backup_Frontend',
+            fields=[
+                ('id', models.IntegerField(primary_key=True)),
+                ('v1n' , models.DecimalField(db_column='V1N_pks', max_digits=4, blank = True, null = True)),
+                ('v1s' , models.DecimalField(db_column='V1S_pks', max_digits=4, blank = True, null = True)),
+                ('l1n' , models.DecimalField(db_column='L1N_pks', max_digits=4, blank = True, null = True)),
+                ('l1s' , models.DecimalField(db_column='L1S_pks', max_digits=4, blank = True, null = True)),
+                ('v3n' , models.DecimalField(db_column='V3N_pks', max_digits=4, blank = True, null = True)),
+                ('v3s' , models.DecimalField(db_column='V3S_pks', max_digits=4, blank = True, null = True)),
+                ('speed', models.DecimalField(blank=True, db_column='Speed', max_digits=4, decimal_places=2)),
+		('date', models.CharField(blank=True, db_column='TrainDateTime', max_length=255, null=True)),
+ 		('carloc' , models.DecimalField(db_column='carOrLoc', max_length=255, blank = True, null = True)),
+		('frequency' , models.CharField(db_column='frequency_v1n', max_length=25)),
+		('roundedpeaks' , models.CharField(db_column='roundedpeaks', max_length=25)),
+
+
+            ],
+        ),
+
+	migrations.CreateModel(
+            name='Backup_Speed',
+            fields=[
+                ('id', models.IntegerField(primary_key=True)),
+                ('v1n' , models.DecimalField(db_column='V1N_pks', max_digits=4, blank = True, null = True)),
+                ('v1s' , models.DecimalField(db_column='V1S_pks', max_digits=4, blank = True, null = True)),
+                ('l1n' , models.DecimalField(db_column='L1N_pks', max_digits=4, blank = True, null = True)),
+                ('l1s' , models.DecimalField(db_column='L1S_pks', max_digits=4, blank = True, null = True)),
+                ('v3n' , models.DecimalField(db_column='V3N_pks', max_digits=4, blank = True, null = True)),
+                ('v3s' , models.DecimalField(db_column='V3S_pks', max_digits=4, blank = True, null = True)),
+                ('speed', models.DecimalField(blank=True, db_column='Speed', max_digits=25, decimal_places=2)),
+		('date', models.CharField(blank=True, db_column='TrainDateTime', max_length=255, null=True)),
+ 		('carloc' , models.DecimalField(db_column='carOrLoc', max_length=255, blank = True, null = True)),
+		('freq_speed' , models.CharField(db_column='freq_speed', max_length=25)),
+		
+
             ],
         ),
         migrations.CreateModel(
