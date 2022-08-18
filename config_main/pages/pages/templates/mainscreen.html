@@ -1,0 +1,292 @@
+
+
+{% load static %}
+
+{% block content %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maximum Load Details</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .chartMenu {
+        width: 100vw;
+        height: 50px;
+        background: #1A1A1A;
+        color: #6185d4;
+      }
+      .chartMenu p {
+        padding: 20px;
+        font-size: 30px;
+      }
+      .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        background: #e1f5fe;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position:  absolute;
+        
+      }
+      .chartBox {
+        width: 400px;
+        padding: 10px;
+        border-radius: 20px;
+        border: solid 3px rgba(255, 26, 104, 1);
+        background: white;
+      }
+       .chartCardForm {
+        width: 100vw;
+        height: 10vh;
+        background: #e1f5fe;
+        display: reverse-flex;
+        align-items: center;
+        justify-content: center;
+        position:  relative;
+      }
+      }
+    </style>
+  </head>
+<body>
+<div class="chartMenu">
+  <p>Main Screen View</p>  
+</div>
+
+<div class="chartCardForm">
+    <form method="GET" action="" >
+        <span style="font-size: 23px">
+            Vertical Max Loads: <label>{{ great_vert }}</label><br>
+        </span> 
+    </form>
+    
+    <form method="GET" action="" >
+        <span style="font-size: 23px">
+            Lateral Max Loads:   <label>{{ great_lat }}</label><br>
+        </span>
+    </form>
+    
+    <form method="GET" action="" >
+        <span style="font-size: 23px">
+            Trains To Date:   <label>{{ TrainsToDate }}</label><br>
+        </span>
+    </form>
+</div>
+
+</div>
+<div class="chartCard">
+    <div class="chartBox">
+        <canvas id="myChart1"></canvas>
+    </div>
+    <div class="chartBox">
+        <canvas id="myChart2"></canvas>
+    </div>
+    
+</div>
+
+
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // setup
+    const data1 = {
+      labels: [{% for v1nValue in v1nValue %} '{{v1nValue.v1n}}', {% endfor %}],
+      datasets: [{
+        label: 'Vertical Loads',
+        data: [{% for v1n_count in v1n_count %} '{{v1n_count.frequency}}', {% endfor %}],
+        backgroundColor: 'rgba(255, 26, 104, 1)',
+        borderColor: 'rgba(255, 26, 104, 1)',
+        borderWidth: 0,
+        barPercentage:1,
+        categoryPercentage:1,
+        tension: 0.4,
+        pointRadius:0,
+        yAxisID: 'y'
+      }
+      ]
+    };
+    console.log(data1)
+     const config1 = {
+      type: 'bar',
+      data: data1,
+      options: {
+        aspectRatio: 1,
+        scales: {
+            x: {
+                beginAtZero:true,
+                ticks: {
+                    callback: (value, index, values) => {
+                        if(data1.labels[index] > 0.00 && data1.labels[index] < 3.00){
+                            return data1.labels.value = "0 to 3"
+
+                        }
+                        else if(data1.labels[index] > 3.01 && data1.labels[index] < 6.00){
+                            return data1.labels.value = "3 to 6"
+
+                        }
+                        else if(data1.labels[index] > 6.01 && data1.labels[index] < 9.00){
+                            return data1.labels.value = "6 to 9"
+
+                        }
+                        else if(data1.labels[index] > 9.01 && data1.labels[index] < 12.00){
+                            return data1.labels.value = "9 to 12"
+
+                        }
+                        else if(data1.labels[index] > 12.01 && data1.labels[index] < 15.00){
+                            return data1.labels.value = "12 to 15"
+
+                        }
+                        else if(data1.labels[index] > 15.01 && data1.labels[index] < 18.00){
+                            return data1.labels.value = "15 to 18"
+
+                        }
+                        else if(data1.labels[index] > 18.01 && data1.labels[index] < 21.00){
+                            return data1.labels.value = "18 to 21"
+                        }
+                        else if(data1.labels[index] > 21.01 && data1.labels[index] < 24.00){
+                            return data1.labels.value = "21 to 24"
+                        }
+                        else if(data1.labels[index] > 24.01 && data1.labels[index] < 27.00){
+                            return data1.labels.value = "24 to 27"
+                        }
+                        else if(data1.labels[index] > 27.01 && data1.labels[index] < 30.00){
+                            return data1.labels.value = "27 to 30"
+                        }
+                        else if(data1.labels[index] > 30.01 && data1.labels[index] < 33.00){
+                            return data1.labels.value = "30 to 33"
+                        }
+                        else if(data1.labels[index] > 33.01 && data1.labels[index] < 36.00){
+                            return data1.labels.value = "33 to 36"
+                        }
+                        else if(data1.labels[index] > 36.01 && data1.labels[index] < 39.00){
+                            return data1.labels.value = "36 to 39"
+                        }
+                        else if(data1.labels[index] > 39.01 && data1.labels[index] < 42.00){
+                            return data1.labels.value = "39 to 42"
+                        }
+                        else if(data1.labels[index] > 42.01 && data1.labels[index] < 45.00){
+                            return data1.labels.value = "42 to 45"
+                        }
+                        else if(data1.labels[index] > 45.01 && data1.labels[index] < 48.00){
+                            return data1.labels.value = "45 to 48"
+                        }
+                        else if(data1.labels[index] > 48.01 && data1.labels[index] < 52.00){
+                            return data1.labels.value = "48 to 52"
+                        }
+                        else if(data1.labels[index] > 52.01 && data1.labels[index] < 55.00){
+                            return data1.labels.value = "52 to 55"
+                        }
+                        },
+                        autoSkip:true,
+                        autoSkipPadding: 7,
+                        maxTicksLimit:7,
+                    },
+
+                offset: false,
+                grid: {
+                    offset: false
+                }
+                },
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+    };
+    // render init block
+    const myChart1 = new Chart(
+      document.getElementById('myChart1'),
+      config1
+    );
+
+
+    const data2 = {
+      labels: [{% for spValue in spValue %} '{{spValue.speed}}', {% endfor %}],
+      datasets: [{
+        label: 'Speed',
+        data: [{% for sp_count in sp_count %} '{{ sp_count.freq_speed }}', {% endfor %}],
+        backgroundColor: 'rgba(255, 26, 104, 1)',
+        borderColor: 'rgba(255, 26, 104, 1)',
+        barPercentage:1,
+        categoryPercentage:1,
+        borderWidth: 0,
+        tension: 0.4,
+        pointRadius:0
+      }]
+    };
+    console.log(data2.datasets)
+    // config 
+   const config2 = {
+      type: 'bar',
+      data: data2,
+      options: {
+        aspectRatio: 1,
+        scales: {
+            x: {
+                ticks: {
+                    callback: (value, index, values) => {
+                        if(data2.labels[index] < 20 && data2.labels[index] > 23.00){
+                            return data2.labels.value = "20 to 23"
+                        }
+                        else if(data2.labels[index] > 23.01 && data2.labels[index] < 26.00){
+                            return data2.labels.value = "23 to 26"
+                        }
+                        else if(data2.labels[index] > 26.01 && data2.labels[index] < 29.00){
+                            return data2.labels.value = "26 to 29"
+                        }
+                        else if(data2.labels[index] > 29.01 && data2.labels[index] < 32.00){
+                            return data2.labels.value = "29 to 32"
+                        }
+                        else if(data2.labels[index] > 32.01 && data2.labels[index] < 35.00){
+                            return data2.labels.value = "32 to 35"
+                        }
+                        else if(data2.labels[index] > 35.01 && data2.labels[index] < 38.00){
+                            return data2.labels.value = "35 to 38"
+                        }
+                        else if(data2.labels[index] > 38.01 && data2.labels[index] < 42.00){
+                            return data2.labels.value = "38 to 42"
+                        }
+                        else if(data2.labels[index] > 42.01 && data2.labels[index] < 46.00){
+                            return data2.labels.value = "42 to 46"
+                        }
+                        },
+                        autoSkip:true,
+                        autoSkipPadding: 5,
+                        maxTicksLimit:4,
+                    },
+                    offset: false,
+                    grid: {
+                    offset: false
+                }
+                },
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+    };
+
+    const myChart2 = new Chart(
+      document.getElementById('myChart2'),
+      config2
+    );
+
+
+    
+    </script>
+  </body>
+</html>
+
+{% endblock %}
