@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import django_heroku #adding for deployment through heroku
-import dj_database_url #adding for deployment through heroku
+import os
+#import django_heroku #adding for deployment through heroku
+#import dj_database_url #adding for deployment through heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-v^wpfjv_apl9)_zi8q@ku&@0p3f%g#!t^sz_75ba4^!#g2ef+!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['54.196.198.18', 'FTA.railtec.illinois.edu']
+ALLOWED_HOSTS = ['54.196.198.18', 'FTA.railtec.illinois.edu', 'railtecfrontend.herokuapp.com']
 
 # Application definition
 
@@ -73,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi'
 
 
 # Database
@@ -133,9 +134,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
-STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles')) # new
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')#str(BASE_DIR.joinpath('staticfiles')) # new
+STATIC_TMP = os.path.join(BASE_DIR, 'static')
+
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # new
-django_heroku.settings(locals()) #adding for deployment through heroku
+
+os.makedirs(STATIC_TMP, exist_ok=True)
+os.makedirs(STATIC_ROOT, exist_ok=True)
+#django_heroku.settings(locals()) #adding for deployment through heroku
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
