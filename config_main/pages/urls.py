@@ -3,7 +3,7 @@ from django.conf.urls import url
 from . import views
 from .views import *
 from django.conf import settings
-from django.views.static import serve
+
 from django.conf.urls.static import static
 urlpatterns = [
     path('', LoginPageView.as_view(), name='login'),
