@@ -37,8 +37,67 @@
 </br>
 
 <body>
-<br>
 
+<div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus icon'></i>
+        <div class="logo_name">RailTEC</div>
+        <i class='bx bx-menu' id="btn"></i>
+    </div>
+    <ul class="nav-list">
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <i class='bx bx-grid-alt'></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+         <span class="tooltip">Dashboard</span>
+      </li>
+      <li>
+        <a href="{% url 'dbtable' %}">
+          <i class='bx bx-table'></i>
+          <span class="links_name">Master Peak Database</span>
+        </a>
+         <span class="tooltip">Master Peak Database</span>
+      </li>
+      <li>
+        <a href="{% url 'trainspec' %}">
+          <i class='bx bx-train'></i>
+          <span class="links_name">Train Specifications</span>
+        </a>
+         <span class="tooltip">Train Specifications</span>
+      </li>
+      <li>
+       <a href="#">
+         <i class='bx bx-user'></i>
+         <span class="links_name">User</span>
+       </a>
+       <span class="tooltip">User</span>
+     </li>
+     <li>
+       <a href="#">
+         <i class='bx bx-chat' ></i>
+         <span class="links_name">Tasks</span>
+       </a>
+       <span class="tooltip">Tasks</span>
+     </li>
+     <li>
+       <a href="#">
+         <i class='bx bx-pie-chart-alt-2' ></i>
+         <span class="links_name2">Analytics</span>
+       </a>
+       <span class="tooltip">Analytics</span>
+     </li>
+     <li class="profile">
+         <div class="profile-details">
+           <img src="pages/static/img/man.png">
+           <div class="name_job">
+             <div class="name">User</div>
+           </div>
+         </div>
+         <a href="/"><i class='bx bx-log-out' id="log_out" ></i></a>
+     </li>
+    </ul>
+  </div>
 <div class = "row">
 	<div class = "col">
 		<div class = "card card-subtitle mb-2 text-muted">
