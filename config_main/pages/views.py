@@ -34,9 +34,13 @@ class DashboardPageView(TemplateView):
         greatest_v = Metratr116.objects.all().aggregate(largest = Greatest(Max('v1n'), Max('v1s'), Max('v3n'), Max('v3s'))).values()
         great_vert = list(greatest_v)
         great_vert = ','.join(['{:.2f}'.format(x) for x in great_vert])
-        
 
-       
+        # added the separate locomotive and car values
+        greatest_v_loc = list(Metratr116.objects.filter(carloc = 'locomotive').aggregate(largest = Greatest(Max('v1n'), Max('v1s'), Max('v3n'), Max('v3s'))).values())
+        greatest_v_car = list(Metratr116.objects.filter(carloc = 'car').aggregate(largest = Greatest(Max('v1n'), Max('v1s'), Max('v3n'), Max('v3s'))).values())
+        great_vert_loc = round(greatest_v_loc[0], 2)
+        great_vert_car = round(greatest_v_car[0], 2)
+             
 
         greatest_l = Metratr116.objects.aggregate(largest = 
             Greatest(Max('l1n'), Max('l1s'))).values()
@@ -49,6 +53,8 @@ class DashboardPageView(TemplateView):
         context['great_vert'] = great_vert
         context['great_lat'] = great_lat
         context['TrainsToDate'] = TrainsToDate
+        context['great_vert_loc']  = great_vert_loc
+        context['great_vert_car']  = great_vert_car
         
         return context
 
