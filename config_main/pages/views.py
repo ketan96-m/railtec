@@ -83,12 +83,10 @@ def TrainSpecView(request):
     return render(request, 'trainspec.html', locals())    
 
 
-def TrainSpecFilterView(request, train_pk):
+def TrainSpecFilterView(request):
     all_data = Backup_Frontend.objects.all()
-    train_data = Backup_Frontend.objects.filter(tr_id = train_pk)
     myFilter = Metratr116Filter(request.GET, queryset = all_data)
     train_data = myFilter.qs
-
     context = {'train_data': train_data, 'myFilter' : myFilter}
     return render(request, 'trainspec.html', context)
     
