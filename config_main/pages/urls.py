@@ -11,8 +11,8 @@ urlpatterns = [
     path('lateral/', LateralPageView.as_view(), name='lateral'),
     path('vertical/', VerticalPageView.as_view(), name='vertical'),
     path('dbtable/', views.DBTableView, name = 'dbtable'),
-    path('trainspec/', views.TrainSpecView, name = 'trainspec'),
-    path('trainspec/<str:train_pk>/', views.TrainSpecFilterView, name = 'trainspec'),
+    path('trainspec/', views.TrainSpecFilterView, name = 'trainspec'),
+    # path('trainspec/<str:train_pk>/', views.TrainSpecFilterView, name = 'trainspec'),
     path('mainscreen/', views.MainScreenView, name = 'mainscreen'),
  
     url(r'^media/(?P<path>.*)$', serve,{'document_root':settings.MEDIA_ROOT}), 
