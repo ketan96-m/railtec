@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-v^wpfjv_apl9)_zi8q@ku&@0p3f%g#!t^sz_75ba4^!#g2ef+!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['54.196.198.18', 'FTA.railtec.illinois.edu', 'ftarailtec.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['54.196.198.18', 'fta.railtec.illinois.edu', 'ftarailtec.herokuapp.com','127.0.0.1']
 
 # Application definition
 
