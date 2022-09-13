@@ -46,7 +46,7 @@ def cumulative_plot():
         opacity=0.75,
         xbins=dict( # bins used for histogram
         start=0,
-        size=0.5,
+        size=1,
         
     ),
         ),
@@ -57,7 +57,11 @@ def cumulative_plot():
         name='V1N', # name used in legend and hover labels
         marker_color='#3ea855',
         opacity=0.50,
+        xbins=dict( # bins used for histogram
+        start=0,
+        size=1,
         
+    )
         ),
     row=1,col=2)
 
@@ -67,7 +71,12 @@ def cumulative_plot():
         histnorm='density',
         name='Speed', # name used in legend and hover labels
         marker_color='#3745db',
-        opacity=0.75
+        opacity=0.75,
+        xbins=dict( # bins used for histogram
+        start=0,
+        size=1,
+        
+    )
         ),
     row=2,col=1)
 
