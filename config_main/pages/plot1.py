@@ -19,6 +19,7 @@ import sqlalchemy
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
+pd.set_option('precision',10)
 
 
 
@@ -28,9 +29,9 @@ def cumulative_plot():
     df = pd.read_sql('SELECT * FROM metratr116', con=db_connection)
     
     V1_car = df["V1N_pks"][df["carOrLoc"] == "car" ]
+    
     V1_loc = df["V1N_pks"][df["carOrLoc"] == "locomotive"]
-    speed = df["Speed"]
-
+    speed = df["Speed"].loc[df["Speed"]>45]
     
 
     fig = make_subplots(
@@ -39,21 +40,18 @@ def cumulative_plot():
 
     fig.add_trace(go.Histogram(
         x=V1_car,
-        histnorm='density',
         histfunc = "count",
+        #histnorm = 'density',
         name='V1N', # name used in legend and hover labels
         marker_color='#EB89B5',
         opacity=0.75,
-        xbins=dict( # bins used for histogram
-        start=0,
-        size=0.5,
-        
-    ),
+        #hover_data={'x':':.2f'},
+
         ),
     row=1,col=1)
     fig.add_trace(go.Histogram(
         x=V1_loc,
-        histnorm='density',
+        histfunc = "min",
         name='V1N', # name used in legend and hover labels
         marker_color='#3ea855',
         opacity=0.50,
@@ -64,14 +62,16 @@ def cumulative_plot():
 
     fig.add_trace(go.Histogram(
         x=speed,
-        histnorm='density',
+        histfunc = "count",
         name='Speed', # name used in legend and hover labels
         marker_color='#3745db',
-        opacity=0.75
+        opacity=0.75,
+        xbins=dict( # bins used for histogram
+        start=0,
+        size=0.5,
+        )
         ),
     row=2,col=1)
-
-
 
     fig.update_xaxes(title_text = "Load", row=1,col=1)
     fig.update_xaxes(title_text="Load", row=1,col=2)
@@ -86,11 +86,13 @@ def cumulative_plot():
         bargroupgap=0, # gap between bars of the same location coordinates
         width = 1000,
         height = 700,
+         
     )
     fig.show()
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     
     return plot_div
+    return(len(V1_car))
 
 
 def lateral_plot():

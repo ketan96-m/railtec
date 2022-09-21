@@ -158,15 +158,14 @@ class Backup_Frontend(models.Model):
     l1s = models.DecimalField(db_column='L1S_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
     v3n = models.DecimalField(db_column='V3N_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
     v3s = models.DecimalField(db_column='V3S_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    v3n_prot = models.DecimalField(db_column='V3N Prot', max_digits=4, decimal_places=2)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    v3n_prot = models.DecimalField(db_column='V3NProt', max_digits=4, decimal_places=2)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     carloc = models.CharField(db_column='carOrLoc', max_length=255)  # Field name made lowercase.
     speed = models.DecimalField(db_column='Speed', max_digits=4, decimal_places=2, default="", editable=False)  # Field name made lowercase.
-    frequency = models.CharField(db_column='frequency_v1n', max_length=25)
-    roundedpeaks = models.CharField(db_column='roundedpeaks', max_length=25)
+    
 
     class Meta:
         managed = True
-        db_table = 'final_dataset'
+        db_table = 'metra_backup_frontend_0918'
 
 
 class Backup_Speed(models.Model):
@@ -181,7 +180,6 @@ class Backup_Speed(models.Model):
     v3n_prot = models.DecimalField(db_column='V3N Prot', max_digits=4, decimal_places=2)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     carloc = models.CharField(db_column='carOrLoc', max_length=255)  # Field name made lowercase.
     speed = models.DecimalField(db_column='Speed', max_digits=25, decimal_places=2)  # Field name made lowercase.
-    freq_speed = models.CharField(db_column='freq_speed', max_length=25)
     
 
     class Meta:

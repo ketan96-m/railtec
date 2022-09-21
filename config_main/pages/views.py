@@ -56,6 +56,7 @@ class DashboardPageView(TemplateView):
         context['great_vert_loc']  = great_vert_loc
         context['great_vert_car']  = great_vert_car
         
+        
         return context
 
 
@@ -98,27 +99,31 @@ def DBTableView(request):
     #data = Backup_Speed.objects.all().aggregate(Max('v1n'))
     all_fields = [field.name for field in Metratr116._meta.get_fields()[2:3]]
     #get_all = Backup_Speed._meta.get_fields
-    datav1n = Backup_Frontend.objects.order_by('-v1n')[:4]
-    datav1s = Backup_Frontend.objects.order_by('-v1s')[:4]
-    datav3n = Backup_Frontend.objects.order_by('-v3n')[:4]
-    datav3s = Backup_Frontend.objects.order_by('-v3s')[:4]
+    datav1n_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v1n')[:4])
+    datav1n_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v1n')[:4])
+    datav1s_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v1s')[:4])
+    datav1s_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v1s')[:4])
+    datav3n_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v3n')[:4])
+    datav3n_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3n')[:4])
+    datav3s_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v3s')[:4])
+    datav3s_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3s')[:4])
     context = {
                 'all_fields' : all_fields,
-                'datav1n' : datav1n,
-                'datav1s' : datav1s,
-                'datav3n' : datav3n,
-                'datav3s' : datav3s
+                'datav1n_car' : datav1n_car,
+                'datav1n_loc' : datav1n_loc,
+                'datav1s_car' : datav1s_car,
+                'datav1s_loc' : datav1s_loc,
+                'datav3n_car' : datav3n_car,
+                'datav3n_loc' : datav3n_loc,
+                'datav3s_car' : datav3s_car,
+                'datav3s_loc' : datav3s_loc,
                 }
     return render(request, 'dbtable.html', locals())
 
 
-def MainScreenView(request):
-
-    
+def MainScreenView(request):    
     v1nValue = Metratr116.objects.all().order_by('v1n')
     v1n_count = Metratr116.objects.all().values('frequency')
-    
-    
     spValue = Metratr116.objects.all().order_by('speed')
     sp_count = Metratr116.objects.all().values('freq_speed')
 
