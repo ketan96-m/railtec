@@ -4,11 +4,17 @@ from sqlalchemy import create_engine
 from django.shortcuts import render, redirect
 from django.db.models import Max, Count
 from django.db.models.functions import Greatest, Substr
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from .decorators import allowed_users
+
+from django.contrib import messages
+from django.urls import reverse_lazy
 
 # Create your views here.
 from django.http import HttpResponse, request
-from django.views.generic import View, TemplateView, ListView
-
+from django.views.generic import View, TemplateView, ListView, UpdateView
 import csv
 import numpy as np
 import pandas as pd
@@ -21,10 +27,35 @@ from .filters import Metratr116Filter
 
 
 
-class LoginPageView(TemplateView):
-    template_name = 'login.html'
+def register_login(request):
+    form = UserCreationForm()
+    if "register" in request.method == 'POST':
+        form = UserCreationForm(request.POST) == "Register"
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data['username']
+            messages.success(request,"Account was Created for " + user)
+        
+    context = {'form':form}
+    return render(request,'login.html',context)
+    
+    if "login" in request.method == "POST":
+        if request.POST['submit'] == 'Login':
+            username = request.POST['username']
+            password = request.POST['password']
 
+            user = authenticate(request, username=username, password=password)
 
+            if user is not None:
+                login(request,user)
+                fname = user.first_name
+                return render(request, "dashboard.html", {'fname':fname})
+            else:
+                messages.error(request, 'Wrong Username or password')
+                return redirect('login')
+    context = {}
+    return render(request,'login.html',context)
+            
 class DashboardPageView(TemplateView): 
     template_name = 'dashboard.html'
     def get_context_data(self, **kwargs):
@@ -56,6 +87,7 @@ class DashboardPageView(TemplateView):
         context['great_vert_loc']  = great_vert_loc
         context['great_vert_car']  = great_vert_car
         
+        
         return context
 
 
@@ -79,12 +111,12 @@ class VerticalPageView(TemplateView):
 
 
 def TrainSpecView(request):  
-    train_data = Backup_Frontend.objects.all()
+    train_data = Backup_Speed.objects.all()
     return render(request, 'trainspec.html', locals())    
 
 
 def TrainSpecFilterView(request):
-    all_data = Backup_Frontend.objects.all()
+    all_data = Backup_Speed.objects.all()
     myFilter = Metratr116Filter(request.GET, queryset = all_data)
     train_data = myFilter.qs
     context = {'train_data': train_data, 'myFilter' : myFilter}
@@ -98,38 +130,43 @@ def DBTableView(request):
     #data = Backup_Speed.objects.all().aggregate(Max('v1n'))
     all_fields = [field.name for field in Metratr116._meta.get_fields()[2:3]]
     #get_all = Backup_Speed._meta.get_fields
-    datav1n = Backup_Frontend.objects.order_by('-v1n')[:4]
-    datav1s = Backup_Frontend.objects.order_by('-v1s')[:4]
-    datav3n = Backup_Frontend.objects.order_by('-v3n')[:4]
-    datav3s = Backup_Frontend.objects.order_by('-v3s')[:4]
+    datav1n_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v1n')[:4])
+    datav1n_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v1n')[:4])
+    datav1s_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v1s')[:4])
+    datav1s_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v1s')[:4])
+    datav3n_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v3n')[:4])
+    datav3n_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3n')[:4])
+    datav3s_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v3s')[:4])
+    datav3s_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3s')[:4])
     context = {
                 'all_fields' : all_fields,
-                'datav1n' : datav1n,
-                'datav1s' : datav1s,
-                'datav3n' : datav3n,
-                'datav3s' : datav3s
+                'datav1n_car' : datav1n_car,
+                'datav1n_loc' : datav1n_loc,
+                'datav1s_car' : datav1s_car,
+                'datav1s_loc' : datav1s_loc,
+                'datav3n_car' : datav3n_car,
+                'datav3n_loc' : datav3n_loc,
+                'datav3s_car' : datav3s_car,
+                'datav3s_loc' : datav3s_loc,
                 }
     return render(request, 'dbtable.html', locals())
 
+@login_required
+@allowed_users(allowed_roles=['CTA'])
+def testcta(request):    
 
-def MainScreenView(request):
+    context = {}
+    return render(request, 'ctadashboard.html', context)
 
-    
-    v1nValue = Metratr116.objects.all().order_by('v1n')
-    v1n_count = Metratr116.objects.all().values('frequency')
-    
-    
-    spValue = Metratr116.objects.all().order_by('speed')
-    sp_count = Metratr116.objects.all().values('freq_speed')
 
-    
+##Separate users for Metra and CTA - 9/24
 
-    context = {
-    'spValue':spValue,
-    'v1nValue': v1nValue,
-    'sp_count': sp_count,
-    'v1n_count': v1n_count,
-    }
-    return render(request, 'mainscreen.html', context)
+def enter_view(request):
+    if request.user.has_perm('app_label.permission_codename'):
+        return redirect('/dashboard')
+    elif request.user.has_perm('app_label.another_permission'):
+        return redirect('/ctadashboard')
+    else:
+        return redirect('/dashboard')
 
 

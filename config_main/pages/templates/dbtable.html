@@ -12,7 +12,7 @@
 			     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 			    
 			    <meta charset="UTF-8"> 
-			    <link rel="stylesheet" href="{% static '/css/dashboard.css' %}">
+			    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 			    <!-- Boxicons CDN Link -->
 			    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
 			    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -49,7 +49,7 @@
     </div>
     <ul class="nav-list">
       <li>
-        <a href="#">
+        <a href="{% url 'dashboard' %}">
           <i class='bx bx-grid-alt'></i>
           <span class="links_name">Dashboard</span>
         </a>
@@ -124,9 +124,9 @@
           <p><p>
           </div>
         
-<table>
+<table float = 'left' width = 50% position = "relative">
 
-	{% if datav1n %}
+	{% if datav1n_car %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
@@ -134,8 +134,8 @@
 	<th>Speed</th>
 	<th>Vehicle Type</th>
 </tr>
-		<h1>Database Table Values</h1>
-		{% for x in datav1n %}
+		
+		{% for x in datav1n_car %}
 		<tr>
 			<td>{{x.tr_id}}</td>
 			<td>{{"V1N"}}</td>
@@ -148,10 +148,10 @@
 		{% else %}
 		<h1>No Data</h1>
 	{% endif %}
-</table>
 
-<table>
-	{% if datav1s %}
+
+	
+	{% if datav1s_car %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
@@ -159,7 +159,7 @@
 	<th>Speed</th>
 	<th>Vehicle Type</th>
 </tr>
-		{% for x in datav1s %}
+		{% for x in datav1s_car %}
 		<tr>
 			<td>{{x.tr_id}}</td>
 			<td>{{"V1S"}}</td>
@@ -171,10 +171,8 @@
 {% else %}
 		<h1>No Data</h1>
 	{% endif %}
-</table>
 
-<table>
-	{% if datav3n %}
+	{% if datav3n_car %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
@@ -182,7 +180,7 @@
 	<th>Speed</th>
 	<th>Vehicle Type</th>
 </tr>
-		{% for x in datav3n %}
+		{% for x in datav3n_car %}
 		<tr>
 			<td>{{x.tr_id}}</td>
 			<td>{{"V3N"}}</td>
@@ -194,10 +192,8 @@
 {% else %}
 		<h1>No Data</h1>
 	{% endif %}
-</table>
 
-<table>
-	{% if datav3s %}
+	{% if datav3s_car %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
@@ -205,7 +201,7 @@
 	<th>Speed</th>
 	<th>Vehicle Type</th>
 </tr>
-		{% for x in datav3s %}
+		{% for x in datav3s_car %}
 		<tr>
 			<td>{{x.tr_id}}</td>
 			<td>{{"V3S"}}</td>
@@ -218,6 +214,97 @@
 		<h1>No Data</h1>
 	{% endif %}
 </table>
+
+<table  float="right"  width=50% position = "relative">
+	{% if datav1n_loc %}
+<tr>
+	<th>Train ID</th>
+	<th>Channel Name</th>
+	<th>Load For V1N</th>
+	<th>Speed</th>
+	<th>Vehicle Type</th>
+</tr>
+		{% for x in datav1n_loc %}
+		<tr>
+			<td>{{x.tr_id}}</td>
+			<td>{{"V1N"}}</td>
+			<td>{{x.v1n}}</td>
+			<td>{{x.speed}}</td>
+			<td>{{x.carloc}}</td>
+				</tr>	
+		{% endfor %}
+
+		{% else %}
+		<h1>No Data</h1>
+	{% endif %}
+
+	{% if datav1s_loc %}
+<tr>
+	<th>Train ID</th>
+	<th>Channel Name</th>
+	<th>Load For V1S</th>
+	<th>Speed</th>
+	<th>Vehicle Type</th>
+</tr>
+		{% for x in datav1s_loc %}
+		<tr>
+			<td>{{x.tr_id}}</td>
+			<td>{{"V1S"}}</td>
+			<td>{{x.v1s}}</td>
+			<td>{{x.speed}}</td>
+			<td>{{x.carloc}}</td>
+				</tr>	
+		{% endfor %}
+
+		{% else %}
+		<h1>No Data</h1>
+	{% endif %}
+
+	{% if datav3n_loc %}
+<tr>
+	<th>Train ID</th>
+	<th>Channel Name</th>
+	<th>Load For V3N</th>
+	<th>Speed</th>
+	<th>Vehicle Type</th>
+</tr>
+		{% for x in datav3n_loc %}
+		<tr>
+			<td>{{x.tr_id}}</td>
+			<td>{{"V3N"}}</td>
+			<td>{{x.v3n}}</td>
+			<td>{{x.speed}}</td>
+			<td>{{x.carloc}}</td>
+				</tr>	
+		{% endfor %}
+
+		{% else %}
+		<h1>No Data</h1>
+	{% endif %}
+
+	{% if datav3s_loc %}
+<tr>
+	<th>Train ID</th>
+	<th>Channel Name</th>
+	<th>Load For V3S</th>
+	<th>Speed</th>
+	<th>Vehicle Type</th>
+</tr>
+		{% for x in datav3s_loc %}
+		<tr>
+			<td>{{x.tr_id}}</td>
+			<td>{{"V3S"}}</td>
+			<td>{{x.v3s}}</td>
+			<td>{{x.speed}}</td>
+			<td>{{x.carloc}}</td>
+				</tr>	
+		{% endfor %}
+
+		{% else %}
+		<h1>No Data</h1>
+	{% endif %}
+
+</table>
 <div class="sidebar">
     <div class="logo-details">
       <i class='bx bxl-c-plus-plus icon'></i>
@@ -226,7 +313,7 @@
 	</div>
 
 </section>
-<script src="{% static '/js/dashboard.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 
 </body>
 </html>
