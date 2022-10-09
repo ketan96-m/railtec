@@ -42,20 +42,26 @@ def cumulative_plot():
         x=V1_car,
         histfunc = "count",
         #histnorm = 'density',
-        name='V1N', # name used in legend and hover labels
-        marker_color='#EB89B5',
-        opacity=0.75,
+        name='V1N - Car', # name used in legend and hover labels
+        marker_color='rgba(36, 231, 128)',
+        opacity=1.00,
+        xbins=dict( # bins used for histogram
+        size=0.5,
+        )
         #hover_data={'x':':.2f'},
 
         ),
     row=1,col=1)
     fig.add_trace(go.Histogram(
         x=V1_loc,
-        histfunc = "min",
-        name='V1N', # name used in legend and hover labels
-        marker_color='#3ea855',
+        histfunc = "count",
+        name='V1N - Locomotive', # name used in legend and hover labels
+        marker_color='rgba(255, 153, 0)',
         opacity=0.50,
-        
+        xbins=dict( # bins used for histogram
+        start=0,
+        size=0.5,
+        )
         ),
     row=1,col=2)
 
@@ -64,7 +70,7 @@ def cumulative_plot():
         x=speed,
         histfunc = "count",
         name='Speed', # name used in legend and hover labels
-        marker_color='#3745db',
+        marker_color='rgba(0,0,255)',
         opacity=0.75,
         xbins=dict( # bins used for histogram
         start=0,
@@ -92,7 +98,7 @@ def cumulative_plot():
     plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     
     return plot_div
-    return(len(V1_car))
+    
 
 
 def lateral_plot():

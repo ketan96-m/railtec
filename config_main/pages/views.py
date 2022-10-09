@@ -4,11 +4,17 @@ from sqlalchemy import create_engine
 from django.shortcuts import render, redirect
 from django.db.models import Max, Count
 from django.db.models.functions import Greatest, Substr
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from .decorators import allowed_users
+
+from django.contrib import messages
+from django.urls import reverse_lazy
 
 # Create your views here.
 from django.http import HttpResponse, request
-from django.views.generic import View, TemplateView, ListView
-
+from django.views.generic import View, TemplateView, ListView, UpdateView
 import csv
 import numpy as np
 import pandas as pd
@@ -21,10 +27,35 @@ from .filters import Metratr116Filter
 
 
 
-class LoginPageView(TemplateView):
-    template_name = 'login.html'
+def register_login(request):
+    form = UserCreationForm()
+    if "register" in request.method == 'POST':
+        form = UserCreationForm(request.POST) == "Register"
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data['username']
+            messages.success(request,"Account was Created for " + user)
+        
+    context = {'form':form}
+    return render(request,'login.html',context)
+    
+    if "login" in request.method == "POST":
+        if request.POST['submit'] == 'Login':
+            username = request.POST['username']
+            password = request.POST['password']
 
+            user = authenticate(request, username=username, password=password)
 
+            if user is not None:
+                login(request,user)
+                fname = user.first_name
+                return render(request, "dashboard.html", {'fname':fname})
+            else:
+                messages.error(request, 'Wrong Username or password')
+                return redirect('login')
+    context = {}
+    return render(request,'login.html',context)
+            
 class DashboardPageView(TemplateView): 
     template_name = 'dashboard.html'
     def get_context_data(self, **kwargs):
@@ -80,12 +111,12 @@ class VerticalPageView(TemplateView):
 
 
 def TrainSpecView(request):  
-    train_data = Backup_Frontend.objects.all()
+    train_data = Backup_Speed.objects.all()
     return render(request, 'trainspec.html', locals())    
 
 
 def TrainSpecFilterView(request):
-    all_data = Backup_Frontend.objects.all()
+    all_data = Backup_Speed.objects.all()
     myFilter = Metratr116Filter(request.GET, queryset = all_data)
     train_data = myFilter.qs
     context = {'train_data': train_data, 'myFilter' : myFilter}
@@ -120,21 +151,22 @@ def DBTableView(request):
                 }
     return render(request, 'dbtable.html', locals())
 
+@login_required
+@allowed_users(allowed_roles=['CTA'])
+def testcta(request):    
 
-def MainScreenView(request):    
-    v1nValue = Metratr116.objects.all().order_by('v1n')
-    v1n_count = Metratr116.objects.all().values('frequency')
-    spValue = Metratr116.objects.all().order_by('speed')
-    sp_count = Metratr116.objects.all().values('freq_speed')
+    context = {}
+    return render(request, 'ctadashboard.html', context)
 
-    
 
-    context = {
-    'spValue':spValue,
-    'v1nValue': v1nValue,
-    'sp_count': sp_count,
-    'v1n_count': v1n_count,
-    }
-    return render(request, 'mainscreen.html', context)
+##Separate users for Metra and CTA - 9/24
+
+def enter_view(request):
+    if request.user.has_perm('app_label.permission_codename'):
+        return redirect('/dashboard')
+    elif request.user.has_perm('app_label.another_permission'):
+        return redirect('/ctadashboard')
+    else:
+        return redirect('/dashboard')
 
 

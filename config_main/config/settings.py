@@ -1,3 +1,4 @@
+
 """
 Django settings for config project.
 
@@ -26,9 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v^wpfjv_apl9)_zi8q@ku&@0p3f%g#!t^sz_75ba4^!#g2ef+!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True #If set to False, Static files won't load. Always set it to TRUE in development.
 
-ALLOWED_HOSTS = ['54.196.198.18', 'fta.railtec.illinois.edu', 'ftarailtec.herokuapp.com','127.0.0.1']
+ADMIN_ENABLED = False
+ALLOWED_HOSTS = ['54.196.198.18', 'fta.railtec.illinois.edu', 'railtecfrontend.herokuapp.com']
 
 # Application definition
 
@@ -41,9 +43,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'django_matplotlib',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'pages',
     
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+ADMIN_ENABLED = False
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -146,3 +157,7 @@ os.makedirs(STATIC_ROOT, exist_ok=True)
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+

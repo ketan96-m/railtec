@@ -1,0 +1,163 @@
+
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+      <head>
+			    <meta charset="UTF-8"> 
+			    	<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+			    <!-- Boxicons CDN Link -->
+			    	<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+			    	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+			     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<style>
+					table {
+					width: 60%;
+					color: #6185d4;
+					font-family: sans-serif;
+					font-size: 18px;
+					text-align: center;
+					}
+					th {
+					background-color: #000000;
+					color: white;
+					}
+					tr:nth-child(even) {background-color: #f2f2f2}
+				</style>
+		</head>
+
+<body>
+
+<div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus icon'></i>
+        <div class="logo_name">RailTEC</div>
+        <i class='bx bx-menu' id="btn"></i>
+    </div>
+    <ul class="nav-list">
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <i class='bx bx-grid-alt'></i>
+          <span class="links_name">Dashboard</span>
+        </a>
+         <span class="tooltip">Dashboard</span>
+      </li>
+      <li>
+        <a href="{% url 'dbtable' %}">
+          <i class='bx bx-table'></i>
+          <span class="links_name">Master Peak Database</span>
+        </a>
+         <span class="tooltip">Master Peak Database</span>
+      </li>
+      <li>
+        <a href="{% url 'trainspec' %}">
+          <i class='bx bx-train'></i>
+          <span class="links_name">Train Specifications</span>
+        </a>
+         <span class="tooltip">Train Specifications</span>
+      </li>
+      <li>
+       <a href="#">
+         <i class='bx bx-user'></i>
+         <span class="links_name">User</span>
+       </a>
+       <span class="tooltip">User</span>
+     </li>
+     <li>
+       <a href="#">
+         <i class='bx bx-chat' ></i>
+         <span class="links_name">Tasks</span>
+       </a>
+       <span class="tooltip">Tasks</span>
+     </li>
+     <li>
+       <a href="#">
+         <i class='bx bx-pie-chart-alt-2' ></i>
+         <span class="links_name2">Analytics</span>
+       </a>
+       <span class="tooltip">Analytics</span>
+     </li>
+     <li class="profile">
+         <div class="profile-details">
+           <img src="pages/static/img/man.png">
+           <div class="name_job">
+             <div class="name">User</div>
+           </div>
+         </div>
+         <a href="/"><i class='bx bx-log-out' id="log_out" ></i></a>
+     </li>
+    </ul>
+  </div>
+  <section class="home-section">
+	
+      <h1> Train Specifications </h1>
+          <div class="container" style="margin-left:30px;margin-right:30px;width:auto;font-size:20px;">
+          	<br>
+          <p>Please Enter Train Details Here<p>
+          </div>
+<div class = "row">
+	<div class = "col">
+		<div class = "card card-subtitle mb-2 text-muted">
+			<form method="GET" >
+				{{ myFilter.form.as_p }}
+				<button class = "btn btn-primary" type="submit">
+				Search</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+</br></br></br></br></br></br>
+
+<div class="row">
+	<div class = "col-md">
+		<div class = "card card-body">
+			<table>
+				<tr>
+					<th>Train Date</th>
+					<th>V1N</th>
+					<th>V1S</th>
+					<th>L1N</th>
+					<th>L1S</th>
+					<th>V3N</th>
+					<th>V3S</th>
+					<th>Speed</th>
+					<th>Vehicle Type</th>
+				</tr>
+
+				{% for traindata in train_data %}
+				<tr>
+					<td>{{traindata.tr_id}}</td>
+					<td>{{traindata.v1n}}</td>
+					<td>{{traindata.v1s}}</td>
+					<td>{{traindata.l1n}}</td>
+					<td>{{traindata.l1s}}</td>
+					<td>{{traindata.v3n}}</td>
+					<td>{{traindata.v3s}}</td>
+					<td>{{traindata.speed}}</td>
+					<td>{{traindata.carloc}}</td>
+				</tr>
+
+				{% endfor %}	
+
+			</table>
+		</div>
+	</div>
+</div>
+	
+<div class="sidebar">
+    <div class="logo-details">
+      <i class='bx bxl-c-plus-plus icon'></i>
+    <div class="logo_name">RailTEC</div>
+      <i class='bx bx-menu' id="btn"></i>
+	</div>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+
+</section>
+</body>
+</html>
+
+{% endblock content %}
