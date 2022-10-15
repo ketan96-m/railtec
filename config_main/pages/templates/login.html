@@ -25,41 +25,41 @@
 			<div class="col align-items-center flex-col sign-up">
 				<div class="form-wrapper align-items-center">
 					<div class="form sign-up">
-						
-						<form  action = "login" method="POST" name="Register" value="register">
+						<!-- {% include 'messages.html' %} -->
+						<form   method="POST" name="Register" value="register">
 							{% csrf_token %}
-						<div class="input-group">
-							<i class='bx bxs-user'></i>
-							
-							<input type="text" placeholder="Username" Required>
-						</div>
-						<div class="input-group">
-							<i class='bx bx-mail-send'></i>
-							
-							<input type="email" placeholder="Email" Required>
-						</div>
-						<div class="input-group">
-							<i class='bx bxs-lock-alt'></i>
-							
-							<input type="password" placeholder="Password" Required>
-						</div>
-						<div class="input-group">
-							<i class='bx bxs-lock-alt'></i>
-							 
-							<input type="password" placeholder="Confirm password" Required>
-						</div>
-						<button type="submit">
-							Sign Up
-						</button>
-						<p>
-							<span>
-								Already have an account?
-							</span>
-							<b onclick="toggle()" class="pointer">
-								Sign in here
-							</b>
-						</p>
-					</form>
+							<div class="input-group">
+								<i class='bx bxs-user'></i>
+								
+								<input type="text" name="username" placeholder="Username" Required>
+							</div>
+							<div class="input-group">
+								<i class='bx bx-mail-send'></i>
+
+								<input type="email" name="email" placeholder="Email" Required>
+							</div>
+							<div class="input-group">
+								<i class='bx bxs-lock-alt'></i>
+								
+								<input type="password" name="password1" placeholder="Password" Required>
+							</div>
+							<div class="input-group">
+								<i class='bx bxs-lock-alt'></i>
+								
+								<input type="password" name="password2" placeholder="Confirm password" Required>
+							</div>
+							<button type="submit" name = 'submit' value = 'sign_up'>
+								Sign Up
+							</button>
+							<p>
+								<span>
+									Already have an account?
+								</span>
+								<b onclick="toggle()" class="pointer">
+									Sign in here
+								</b>
+							</p>
+						</form>
 					</div>
 				</div>
 				<div class="form-wrapper">
@@ -85,14 +85,15 @@
 				<div class="form-wrapper align-items-center">
 					<div class="form sign-in">
 						<div class="input-group">
-							<form  action = "{% url 'dashboard' %}" method="POST" name="login" value="login">
+							<!-- {% include 'messages.html' %} -->
+							<form   method="POST" name="Login" value="login">
 					            {% csrf_token %}
 								<i class='bx bxs-user'></i>
 								<input type="text" name = "username"  placeholder="Username" class="form-control" Required>
 						
 							<i class='bx bxs-lock-alt'></i>
 							<input type="password" name = "password" placeholder="Password" class="form-control" Required>
-								<button type="submit" >
+								<button type="submit" name = 'submit' value = 'sign_in'>
 									Sign in
 								</button>
 								<p>
@@ -151,7 +152,7 @@
 				<div class="img sign-up">
 					<img src="static/img/undraw_different_love_a3rg.svg" alt="welcome">
 				</div>
-				<div class="text sign-up">
+				<div class="text sign-up">	
 					<h2>
 						Join us
 					</h2>

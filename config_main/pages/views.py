@@ -28,34 +28,40 @@ from .filters import Metratr116Filter
 
 
 def register_login(request):
-    form = UserCreationForm()
-    if "register" in request.method == 'POST':
-        form = UserCreationForm(request.POST) == "Register"
-        if form.is_valid():
-            form.save()
-            user = form.cleaned_data['username']
-            messages.success(request,"Account was Created for " + user)
-        
-    context = {'form':form}
-    return render(request,'login.html',context)
-    
-    if "login" in request.method == "POST":
-        if request.POST['submit'] == 'Login':
+    if request.method=='POST':
+        form = UserCreationForm(request.POST)
+        if request.POST.get('submit') == 'sign_up':
+            print('Register')
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data['username']
+                print('Account was created',user)
+                messages.success(request,"Account was Created for " + user)
+                return render(request,'login.html',{'form':form})
+            else:
+                print('Error', form.errors, request.POST)
+                messages.error(request, 'Invalid form submission.')
+                messages.error(request, form.errors)
+        if request.POST.get('submit') == 'sign_in':
+            print('Login attempt')
             username = request.POST['username']
             password = request.POST['password']
-
             user = authenticate(request, username=username, password=password)
-
             if user is not None:
+                print('success', request.POST)
                 login(request,user)
                 fname = user.first_name
-                return render(request, "dashboard.html", {'fname':fname})
+                return redirect('dashboard')
             else:
                 messages.error(request, 'Wrong Username or password')
-                return redirect('login')
-    context = {}
+                return render(request,'login.html',{})
+    else:
+        form = UserCreationForm()
+    context = {'form':form}
     return render(request,'login.html',context)
             
+
+
 class DashboardPageView(TemplateView): 
     template_name = 'dashboard.html'
     def get_context_data(self, **kwargs):
