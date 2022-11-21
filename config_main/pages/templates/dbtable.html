@@ -124,7 +124,7 @@
           <p><p>
           </div>
         
-<table float = 'left' width = 50% position = "relative">
+<!-- <table float = 'left' width = 50% position = "relative">
 
 	{% if datav1n_car %}
 <tr>
@@ -304,7 +304,39 @@
 		<h1>No Data</h1>
 	{% endif %}
 
+</table> -->
+
+
+<table  float="right"  width=50% position = "relative">
+	{% if datav1n %}
+<tr>
+	<th>Train ID</th>
+	<!-- <th>Channel Name</th> -->
+	<!-- <th>Load For V1N</th> -->
+	<!-- <th>Load For V1S</th>
+	<!-- <th>Load For V3N</th> -->
+	<th>Channel</th>
+	<th>Load</th>
+	<th>Speed</th>
+	<th>Vehicle Type</th>
+</tr>
+		{% for x in datav1n %}
+		<tr>
+			<td>{{x.0}}</td>
+			<td>{{x.4}}</td>
+			<td>{{x.1}}</td>
+			<td>{{x.2}}</td>
+			<td>{{x.3}}</td>
+				</tr>	
+		{% endfor %}
+
+		{% else %}
+		<h1>No Data</h1>
+	{% endif %}
+
 </table>
+
+
 <div class="sidebar">
     <div class="logo-details">
       <i class='bx bxl-c-plus-plus icon'></i>

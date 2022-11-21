@@ -31,7 +31,8 @@
 				<div class="form-wrapper align-items-center">
 					<div class="form sign-up">
 						<form method = 'post' class="input-group">
-							{% csrf_token %}{{form|crispy}}
+							{% csrf_token %}
+							{{form|crispy}}
 							<p>Have an account already? Login <a href="/login">Here </a>!</p>
 							
 						</form>
