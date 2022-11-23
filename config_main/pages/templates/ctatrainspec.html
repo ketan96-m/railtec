@@ -37,60 +37,29 @@
     </div>
     <ul class="nav-list">
       <li>
-        <a href="{% url 'dashboard' %}">
+        <a href="{% url 'ctadashboard' %}">
           <i class='bx bx-grid-alt'></i>
           <span class="links_name">Dashboard</span>
         </a>
          <span class="tooltip">Dashboard</span>
       </li>
       <li>
-        <a href="{% url 'dbtable' %}">
+        <a href="{% url 'ctadbtable' %}">
           <i class='bx bx-table'></i>
           <span class="links_name">Master Peak Database</span>
         </a>
          <span class="tooltip">Master Peak Database</span>
       </li>
       <li>
-        <a href="{% url 'trainspec' %}">
+        <a href="{% url 'ctatrainspec' %}">
           <i class='bx bx-train'></i>
           <span class="links_name">Train Specifications</span>
         </a>
          <span class="tooltip">Train Specifications</span>
       </li>
-      <li>
-       <a href="#">
-         <i class='bx bx-user'></i>
-         <span class="links_name">User</span>
-       </a>
-       <span class="tooltip">User</span>
-     </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-chat' ></i>
-         <span class="links_name">Tasks</span>
-       </a>
-       <span class="tooltip">Tasks</span>
-     </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-pie-chart-alt-2' ></i>
-         <span class="links_name2">Analytics</span>
-       </a>
-       <span class="tooltip">Analytics</span>
-     </li>
-     <li class="profile">
-         <div class="profile-details">
-           <img src="pages/static/img/man.png">
-           <div class="name_job">
-             <div class="name">User</div>
-           </div>
-         </div>
-         <a href="/"><i class='bx bx-log-out' id="log_out" ></i></a>
-     </li>
     </ul>
   </div>
   <section class="home-section">
-	
       <h1> Train Specifications </h1>
           <div class="container" style="margin-left:30px;margin-right:30px;width:auto;font-size:20px;">
           	<br>
@@ -101,42 +70,50 @@
 		<div class = "card card-subtitle mb-2 text-muted">
 			<form method="GET" >
 				{{ myFilter.form.as_p }}
-				<button class = "btn btn-primary" type="submit">
-				Search</button>
+				<button class = "btn btn-primary" type="submit">Search</button>
 			</form>
 		</div>
 	</div>
 </div>
 
-</br></br></br></br></br></br>
 
 <div class="row">
 	<div class = "col-md">
 		<div class = "card card-body">
 			<table>
 				<tr>
-					<th>Train Date</th>
-					<th>V1N</th>
-					<th>V1S</th>
-					<th>L1N</th>
-					<th>L1S</th>
-					<th>V3N</th>
-					<th>V3S</th>
+					<th>V1E</th>
+					<th>V1W</th>
+					<th>V2E</th>
+					<th>V2W</th>
+					<th>L1E</th>
+					<th>L1W</th>
+					<th>L2E</th>
+					<th>L2W</th>
 					<th>Speed</th>
-					<th>Vehicle Type</th>
+					<th>Train Date</th>
+					<th>Axle</th>
+					<th>Car Num</th>
+					<th>Run Num</th>
+					<th>Unique ID</th>
 				</tr>
 			
 				{% for traindata in train_data %}
 				<tr>
-					<td>{{traindata.tr_id}}</td>
-					<td>{{traindata.v1n}}</td>
-					<td>{{traindata.v1s}}</td>
-					<td>{{traindata.l1n}}</td>
-					<td>{{traindata.l1s}}</td>
-					<td>{{traindata.v3n}}</td>
-					<td>{{traindata.v3s}}</td>
+					<td>{{traindata.v1e}}</td>
+					<td>{{traindata.v1w}}</td>
+					<td>{{traindata.v2e}}</td>
+					<td>{{traindata.v2w}}</td>
+					<td>{{traindata.l1e}}</td>
+					<td>{{traindata.l1w}}</td>
+					<td>{{traindata.l2e}}</td>
+					<td>{{traindata.l2w}}</td>
 					<td>{{traindata.speed}}</td>
-					<td>{{traindata.carloc}}</td>
+					<td>{{traindata.train_id}}</td>
+					<td>{{traindata.axle}}</td>
+					<td>{{traindata.car_num}}</td>
+					<td>{{traindata.run_num}}</td>
+					<td>{{traindata.unique}}</td>
 				</tr>
 
 				{% endfor %}	
