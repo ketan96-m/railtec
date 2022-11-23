@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-v^wpfjv_apl9)_zi8q@ku&@0p3f%g#!t^sz_75ba4^!#g2ef+!
 DEBUG = True #If set to False, Static files won't load. Always set it to TRUE in development.
 
 ADMIN_ENABLED = False
-ALLOWED_HOSTS = ['54.196.198.18', 'fta.railtec.illinois.edu', 'railtecfrontend.herokuapp.com', '127.0.0.1' ]
+ALLOWED_HOSTS = ['54.196.198.18', 'fta.railtec.illinois.edu', 'railtecfrontend.herokuapp.com']
 
 # Application definition
 
@@ -158,6 +158,6 @@ os.makedirs(STATIC_ROOT, exist_ok=True)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'dashboard'
+
 
 
