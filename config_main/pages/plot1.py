@@ -79,9 +79,9 @@ def cumulative_plot():
         ),
     row=2,col=1)
 
-    fig.update_xaxes(title_text = "Wheel Load (Kips)", row=1,col=1)
-    fig.update_xaxes(title_text="Wheel Load (Kips)", row=1,col=2)
-    fig.update_xaxes(title_text="Speed (MPH)", row=2,col=1)
+    fig.update_xaxes(title_text = "Load", row=1,col=1)
+    fig.update_xaxes(title_text="Load", row=1,col=2)
+    fig.update_xaxes(title_text="Load", row=2,col=1)
     fig.update_yaxes(title_text="Frequency",row=1,col=1)
     fig.update_yaxes(title_text="Frequency",row=1,col=2)
     fig.update_yaxes(title_text="Frequency",row=2,col=1)
@@ -144,5 +144,4 @@ def vertical_plot():
     
     vert_plot_div = plot(fig, output_type='div', include_plotlyjs=False)
     return vert_plot_div
-
 
