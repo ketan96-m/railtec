@@ -27,27 +27,3 @@ class Metratr116Filter(django_filters.FilterSet):
 		# self.filters['speed'].label="Speed"
 		self.filters['speed__lte'].label = "Speed (max)"
 		self.filters['speed__gte'].label = "Speed (min)"
-
-
-class CtaTableFilter(django_filters.FilterSet):
-	
-	class Meta:
-		model = Cta_backup
-		fields = [
-		'train_id',
-		'axle',
-		'speed'
-		]
-		fields = {
-			'train_id':['exact'],
-			'axle':['exact'],
-			'speed':['lte','gte']
-		}
-
-		
-	def __init__(self, *args, **kwargs):
-		super(CtaTableFilter, self).__init__(*args, **kwargs)
-		self.filters['train_id'].label="Train Date/Time"
-		self.filters['axle'].label="Axle Number"
-		self.filters['speed__lte'].label = "Speed (max)"
-		self.filters['speed__gte'].label = "Speed (min)"
