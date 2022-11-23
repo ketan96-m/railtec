@@ -49,56 +49,26 @@
     </div>
     <ul class="nav-list">
       <li>
-        <a href="{% url 'dashboard' %}">
+        <a href="{% url 'ctadashboard' %}">
           <i class='bx bx-grid-alt'></i>
           <span class="links_name">Dashboard</span>
         </a>
          <span class="tooltip">Dashboard</span>
       </li>
       <li>
-        <a href="{% url 'dbtable' %}">
+        <a href="{% url 'ctadbtable' %}">
           <i class='bx bx-table'></i>
           <span class="links_name">Master Peak Database</span>
         </a>
          <span class="tooltip">Master Peak Database</span>
       </li>
       <li>
-        <a href="{% url 'trainspec' %}">
+        <a href="{% url 'ctatrainspec' %}">
           <i class='bx bx-train'></i>
           <span class="links_name">Train Specifications</span>
         </a>
          <span class="tooltip">Train Specifications</span>
       </li>
-      <li>
-       <a href="#">
-         <i class='bx bx-user'></i>
-         <span class="links_name">User</span>
-       </a>
-       <span class="tooltip">User</span>
-     </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-chat' ></i>
-         <span class="links_name">Tasks</span>
-       </a>
-       <span class="tooltip">Tasks</span>
-     </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-pie-chart-alt-2' ></i>
-         <span class="links_name2">Analytics</span>
-       </a>
-       <span class="tooltip">Analytics</span>
-     </li>
-     <li class="profile">
-         <div class="profile-details">
-           <img src="pages/static/img/man.png">
-           <div class="name_job">
-             <div class="name">User</div>
-           </div>
-         </div>
-         <a href="/"><i class='bx bx-log-out' id="log_out" ></i></a>
-     </li>
     </ul>
   </div>
   <div class="hover_bkgr_fricc">ß
@@ -126,22 +96,22 @@
         
 <table float = 'left' width = 50% position = "relative">
 
-	{% if datav1n_car %}
+	{% if datav1e %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
 		
-		{% for x in datav1n_car %}
+		{% for x in datav1e %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V1N"}}</td>
-			<td>{{x.v1n}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"V1E"}}</td>
+			<td>{{x.v1e}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 				</tr>	
 		{% endfor %}
 
@@ -151,63 +121,63 @@
 
 
 	
-	{% if datav1s_car %}
+	{% if datav1w %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
-		{% for x in datav1s_car %}
+		{% for x in datav1w %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V1S"}}</td>
-			<td>{{x.v1s}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"V1W"}}</td>
+			<td>{{x.v1w}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 </tr>	
 		{% endfor %}
 {% else %}
 		<h1>No Data</h1>
 	{% endif %}
 
-	{% if datav3n_car %}
+	{% if datav2e %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
-		{% for x in datav3n_car %}
+		{% for x in datav2e %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V3N"}}</td>
-			<td>{{x.v3n}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"V2E"}}</td>
+			<td>{{x.v2e}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 </tr>	
 		{% endfor %}
 {% else %}
 		<h1>No Data</h1>
 	{% endif %}
 
-	{% if datav3s_car %}
+	{% if datav2w %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
-		{% for x in datav3s_car %}
+		{% for x in datav2w %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V3S"}}</td>
-			<td>{{x.v3s}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"V2W"}}</td>
+			<td>{{x.v2w}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 </tr>	
 		{% endfor %}
 {% else %}
@@ -216,21 +186,21 @@
 </table>
 
 <table  float="right"  width=50% position = "relative">
-	{% if datav1n_loc %}
+	{% if datal1e %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
-		{% for x in datav1n_loc %}
+		{% for x in datal1e %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V1N"}}</td>
-			<td>{{x.v1n}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"L1E"}}</td>
+			<td>{{x.l1e}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 				</tr>	
 		{% endfor %}
 
@@ -238,21 +208,21 @@
 		<h1>No Data</h1>
 	{% endif %}
 
-	{% if datav1s_loc %}
+	{% if datal1w %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
-		{% for x in datav1s_loc %}
+		{% for x in datal1w %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V1S"}}</td>
-			<td>{{x.v1s}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"L1W"}}</td>
+			<td>{{x.l1w}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 				</tr>	
 		{% endfor %}
 
@@ -260,21 +230,21 @@
 		<h1>No Data</h1>
 	{% endif %}
 
-	{% if datav3n_loc %}
+	{% if datal2e %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
-		{% for x in datav3n_loc %}
+		{% for x in datal2e %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V3N"}}</td>
-			<td>{{x.v3n}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"L2E"}}</td>
+			<td>{{x.l2e}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 				</tr>	
 		{% endfor %}
 
@@ -282,21 +252,21 @@
 		<h1>No Data</h1>
 	{% endif %}
 
-	{% if datav3s_loc %}
+	{% if datal2w %}
 <tr>
 	<th>Train ID</th>
 	<th>Channel Name</th>
 	<th>Load (Kips)</th>
 	<th>Speed</th>
-	<th>Vehicle Type</th>
+	
 </tr>
-		{% for x in datav3s_loc %}
+		{% for x in datal2w %}
 		<tr>
-			<td>{{x.tr_id}}</td>
-			<td>{{"V3S"}}</td>
-			<td>{{x.v3s}}</td>
+			<td>{{x.train_id}}</td>
+			<td>{{"L2W"}}</td>
+			<td>{{x.l2w}}</td>
 			<td>{{x.speed}}</td>
-			<td>{{x.carloc}}</td>
+			
 				</tr>	
 		{% endfor %}
 
