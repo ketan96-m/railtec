@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.db.models import Max
-from django.contrib.auth.models import User
 
 # Create your models here.
 # This is an auto-generated Django model module.
@@ -55,10 +54,10 @@ class AuthUser(models.Model):
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
-    title = models.CharField(max_length=128)
-    class Meta:
-         managed = False
-         db_table = 'auth_user'
+
+    # class Meta:
+    #     managed = False
+    #     db_table = 'auth_user'
 
 
 class AuthUserGroups(models.Model):
@@ -186,26 +185,4 @@ class Backup_Speed(models.Model):
     class Meta:
         managed = True
         db_table = 'final_dataset_speed'
-    
-
-class Cta_backup(models.Model):
-    id = models.IntegerField(db_column = 'Unique_ID', primary_key = True)
-    car_num = models.FloatField(db_column='Car_num')
-    run_num = models.FloatField(db_column='Run_num')
-    axle = models.FloatField(db_column='Axle')
-    train_id = models.CharField(db_column='TrainDateTime', max_length=255, default="")
-    speed = models.DecimalField(db_column='Speed', max_digits=25, decimal_places=2)  # Field name made lowercase.
-    l2w = models.DecimalField(db_column='L2W_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    l2e = models.DecimalField(db_column='L2E_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    l1w = models.DecimalField(db_column='L1W_pks', max_digits=4, decimal_places=2)  # Field name made lowercase. ##added 'default' and 'editable' properties to avoid non-nullable field error during model migrations.
-    l1e = models.DecimalField(db_column='L1E_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    v2w = models.DecimalField(db_column='V2W_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    v2e = models.DecimalField(db_column='V2E_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    v1w = models.DecimalField(db_column='V1W_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    v1e = models.DecimalField(db_column='V1E_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    
-
-    class Meta:
-        managed = False
-        db_table = 'cta_backup_10222022'
-    
+        
