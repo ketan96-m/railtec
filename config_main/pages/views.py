@@ -10,22 +10,20 @@ from django.contrib.auth.forms import UserCreationForm
 from .decorators import allowed_users
 
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 # Create your views here.
-from django.http import HttpResponse, request
+from django.http import HttpResponse, request, HttpResponseRedirect
 from django.views.generic import View, TemplateView, ListView, UpdateView
 import csv
 import numpy as np
 import pandas as pd
-from . import plot1
+from . import plot1, plot2_cta
 from .models import *
 from django.template import RequestContext
 from django.core import serializers
 from .forms import Metratr116Form
-from .filters import Metratr116Filter
-import pandas as pd
-import json
+from .filters import Metratr116Filter, CtaTableFilter
 
 
 
@@ -38,11 +36,11 @@ def register_login(request):
                 form.save()
                 user = form.cleaned_data['username']
                 print('Account was created',user)
-                messages.success(request,"Account was Created for " + user)
+                messages.success(request,"Account was created for " + user)
                 return render(request,'login.html',{'form':form})
             else:
                 print('Error', form.errors, request.POST)
-                messages.error(request, 'Invalid form submission.')
+                messages.error(request, 'Invalid form submission!')
                 messages.error(request, form.errors)
         if request.POST.get('submit') == 'sign_in':
             print('Login attempt')
@@ -50,18 +48,24 @@ def register_login(request):
             password = request.POST['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                print('success', request.POST)
-                login(request,user)
-                fname = user.first_name
-                return redirect('dashboard')
+                if user.is_superuser:
+                    print('success', request.POST)
+                    login(request,user)
+                    fname = user.first_name
+                    return redirect('dashboard')
+                else:
+                    print('ctasuccess', request.POST)
+                    login(request,user)
+                    fname = user.first_name
+                    return redirect('ctadashboard')
             else:
-                messages.error(request, 'Wrong Username or password')
+                messages.error(request, 'Wrong Username or Password')
                 return render(request,'login.html',{})
     else:
         form = UserCreationForm()
     context = {'form':form}
     return render(request,'login.html',context)
-            
+        
 
 
 class DashboardPageView(TemplateView): 
@@ -127,19 +131,11 @@ def TrainSpecFilterView(request):
     all_data = Backup_Speed.objects.all()
     myFilter = Metratr116Filter(request.GET, queryset = all_data)
     train_data = myFilter.qs
-    all_data = False
-    for key in myFilter.data.keys():
-        if myFilter.data[key] != '':
-            all_data = True
-            break
-    if all_data:
-        context = {'train_data': train_data, 'myFilter' : myFilter}
-    else:
-        context = {'train_data': [], 'myFilter' : myFilter}
+    context = {'train_data': train_data, 'myFilter' : myFilter}
     return render(request, 'trainspec.html', context)
     
  
-
+@login_required
 def DBTableView(request):
     #data = DummyTable_20220508.objects.all()
     #data = Backup_Speed.objects.order_by('-v1n', '-v1s', '-v3s', '-v3n')[:20]
@@ -154,7 +150,6 @@ def DBTableView(request):
     datav3n_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3n')[:4])
     datav3s_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v3s')[:4])
     datav3s_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3s')[:4])
-    
     context = {
                 'all_fields' : all_fields,
                 'datav1n_car' : datav1n_car,
@@ -166,56 +161,51 @@ def DBTableView(request):
                 'datav3s_car' : datav3s_car,
                 'datav3s_loc' : datav3s_loc,
                 }
-    # return render(request, 'dbtable.html', locals())
-    return render(request, 'dbtable.html',context)
+    return render(request, 'dbtable.html', locals())
 
-def DBTableView2(request):
-    #data = DummyTable_20220508.objects.all()
-    #data = Backup_Speed.objects.order_by('-v1n', '-v1s', '-v3s', '-v3n')[:20]
-    #data = Backup_Speed.objects.all().aggregate(Max('v1n'))
-    all_fields = [field.name for field in Metratr116._meta.get_fields()[2:3]]
-    #get_all = Backup_Speed._meta.get_fields
-    top_20_data = []
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20]))
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v1s','speed','carloc').filter().order_by('-v1s')[:20]))
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3n','speed','carloc').filter().order_by('-v3n')[:20]))
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3s','speed','carloc').filter().order_by('-v3s')[:20]))
-    # datav1n = list(Backup_Frontend.objects.filter().order_by('-v1n','-v1s','-v3n','-v3s')[:20])
-    df = pd.DataFrame(top_20_data)
-    df[4] = 20*['V1N'] + 20*['V1S'] + 20*['V3N'] +20*['V3S']
-    df = df.sort_values(1, ascending=False)
 
-    json_records = df.reset_index().to_json(orient ='records')
-    datav1n = []
-    datav1n = json.loads(json_records)[:20]
+class CTADashboard(TemplateView): 
+    template_name = 'ctadashboard.html'
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(CTADashboard, self).get_context_data(**kwargs)
+        
+        context['plotcta'] = plot2_cta.cumulative_cta()
+        return context
 
-    # datav1n = sorted(top_20_data, key = lambda x: x[1], reverse=True)[:20]
-    # print(Backup_Frontend.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20])
-    # print(len(datav1n))
+def TrainSpecCTA(request):
+    all_data = Cta_backup.objects.all()
+    myFilter = CtaTableFilter(request.GET, queryset = all_data)
+    train_data = myFilter.qs
+    context = {'train_data': train_data, 'myFilter' : myFilter}
+    return render(request, 'ctatrainspec.html', context)
+
+
+
+def CTADBTable(request):
+    
+    all_fields = [field.name for field in Cta_backup._meta.get_fields()[2:3]]
+    
+    datav1e = list(Cta_backup.objects.order_by('-v1e')[:3])
+    datav1w = list(Cta_backup.objects.order_by('-v1w')[:3])
+    datav2e = list(Cta_backup.objects.order_by('-v2e')[:3])
+    datav2w = list(Cta_backup.objects.order_by('-v2w')[:3])
+    datal1e = list(Cta_backup.objects.order_by('-l1e')[:3])
+    datal1w = list(Cta_backup.objects.order_by('-l1w')[:3])
+    datal2e = list(Cta_backup.objects.order_by('-l2e')[:3])
+    datal2w = list(Cta_backup.objects.order_by('-l2w')[:3])
     context = {
                 'all_fields' : all_fields,
-                'datav1n':datav1n,
+                'datav1e': datav1e,
+                'datav1w': datav1w,
+                'datav2e': datav2e,
+                'datav2w': datav2w,
+                'datal1e': datal1e,
+                'datal1w': datal1w,
+                'datal2e': datal2e,
+                'datal2w': datal2w,
                 }
-    # return render(request, 'dbtable.html', locals())
-    return render(request, 'dbtable.html',context)
-
-
-@login_required
-@allowed_users(allowed_roles=['CTA'])
-def testcta(request):    
-
-    context = {}
-    return render(request, 'ctadashboard.html', context)
-
-
-##Separate users for Metra and CTA - 9/24
-
-def enter_view(request):
-    if request.user.has_perm('app_label.permission_codename'):
-        return redirect('/dashboard')
-    elif request.user.has_perm('app_label.another_permission'):
-        return redirect('/ctadashboard')
-    else:
-        return redirect('/dashboard')
+    return render(request, 'ctadbtable.html', locals())
+    
 
 
