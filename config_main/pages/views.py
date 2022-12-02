@@ -24,6 +24,7 @@ from django.template import RequestContext
 from django.core import serializers
 from .forms import Metratr116Form
 from .filters import Metratr116Filter, CtaTableFilter
+import json
 
 
 
@@ -131,7 +132,15 @@ def TrainSpecFilterView(request):
     all_data = Backup_Speed.objects.all()
     myFilter = Metratr116Filter(request.GET, queryset = all_data)
     train_data = myFilter.qs
-    context = {'train_data': train_data, 'myFilter' : myFilter}
+    all_data = False
+    for key in myFilter.data.keys():
+        if myFilter.data[key] != '':
+            all_data = True
+            break
+    if all_data:
+        context = {'train_data': train_data, 'myFilter' : myFilter}
+    else:
+        context = {'train_data': [], 'myFilter' : myFilter}
     return render(request, 'trainspec.html', context)
     
  
@@ -150,6 +159,7 @@ def DBTableView(request):
     datav3n_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3n')[:4])
     datav3s_car = list(Backup_Frontend.objects.filter(carloc = "car").order_by('-v3s')[:4])
     datav3s_loc = list(Backup_Frontend.objects.filter(carloc = "locomotive").order_by('-v3s')[:4])
+
     context = {
                 'all_fields' : all_fields,
                 'datav1n_car' : datav1n_car,
@@ -161,7 +171,39 @@ def DBTableView(request):
                 'datav3s_car' : datav3s_car,
                 'datav3s_loc' : datav3s_loc,
                 }
-    return render(request, 'dbtable.html', locals())
+
+    return render(request, 'dbtable.html', context)
+
+@login_required
+def DBTableView2(request):
+    #data = DummyTable_20220508.objects.all()
+    #data = Backup_Speed.objects.order_by('-v1n', '-v1s', '-v3s', '-v3n')[:20]
+    #data = Backup_Speed.objects.all().aggregate(Max('v1n'))
+    all_fields = [field.name for field in Metratr116._meta.get_fields()[2:3]]
+    #get_all = Backup_Speed._meta.get_fields
+    top_20_data = []
+    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20]))
+    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v1s','speed','carloc').filter().order_by('-v1s')[:20]))
+    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3n','speed','carloc').filter().order_by('-v3n')[:20]))
+    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3s','speed','carloc').filter().order_by('-v3s')[:20]))
+    # datav1n = list(Backup_Frontend.objects.filter().order_by('-v1n','-v1s','-v3n','-v3s')[:20])
+    df = pd.DataFrame(top_20_data)
+    df[4] = 20*['V1N'] + 20*['V1S'] + 20*['V3N'] +20*['V3S']
+    df = df.sort_values(1, ascending=False)
+
+    json_records = df.reset_index().to_json(orient ='records')
+    datav1n = []
+    datav1n = json.loads(json_records)[:20]
+
+    # datav1n = sorted(top_20_data, key = lambda x: x[1], reverse=True)[:20]
+    # print(Backup_Frontend.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20])
+    # print(len(datav1n))
+    context = {
+                'all_fields' : all_fields,
+                'datav1n':datav1n,
+                }
+    # return render(request, 'dbtable.html', locals())
+    return render(request, 'dbtable.html',context)
 
 
 class CTADashboard(TemplateView): 
