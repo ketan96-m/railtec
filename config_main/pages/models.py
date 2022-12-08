@@ -209,3 +209,20 @@ class Cta_backup(models.Model):
         managed = False
         db_table = 'cta_backup_10222022'
     
+
+class Metratr116_reprocessed(models.Model):
+    # id = models.IntegerField(primary_key = True)
+    tr_id = models.CharField(primary_key = True, db_column='TrainID', max_length=255)
+    tr_date = models.CharField(db_column='TrainDateTime', max_length=255)
+    v1n = models.DecimalField(db_column='V1N_pks', max_digits=5, decimal_places=2)  # Field name made lowercase. ##added 'default' and 'editable' properties to avoid non-nullable field error during model migrations.
+    v1s = models.DecimalField(db_column='V1S_pks', max_digits=5, decimal_places=2)  # Field name made lowercase.
+    v2s = models.DecimalField(db_column='V2S_pks', max_digits=5, decimal_places=2)  # Field name made lowercase.
+    axle_num = models.DecimalField(db_column = 'AxleNumber', max_digits=4, decimal_places=2)
+    v3s_prot = models.DecimalField(db_column='V3S_Prot_pks', max_digits=4, decimal_places=2)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    carloc = models.CharField(db_column='carOrLoc', max_length=255)  # Field name made lowercase.
+    speed = models.DecimalField(db_column='Speed', max_digits=5, decimal_places=2)  # Field name made lowercase.
+
+
+    class Meta:
+        managed = True
+        db_table = 'METRA_REPROCESSED'

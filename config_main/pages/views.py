@@ -129,7 +129,8 @@ def TrainSpecView(request):
 
 
 def TrainSpecFilterView(request):
-    all_data = Backup_Speed.objects.all()
+    # all_data = Backup_Speed.objects.all()
+    all_data = Metratr116_reprocessed.objects.all()
     myFilter = Metratr116Filter(request.GET, queryset = all_data)
     train_data = myFilter.qs
     all_data = False
@@ -179,16 +180,17 @@ def DBTableView2(request):
     #data = DummyTable_20220508.objects.all()
     #data = Backup_Speed.objects.order_by('-v1n', '-v1s', '-v3s', '-v3n')[:20]
     #data = Backup_Speed.objects.all().aggregate(Max('v1n'))
-    all_fields = [field.name for field in Metratr116._meta.get_fields()[2:3]]
+    all_fields = [field.name for field in Metratr116_reprocessed._meta.get_fields()[2:3]]
     #get_all = Backup_Speed._meta.get_fields
     top_20_data = []
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20]))
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v1s','speed','carloc').filter().order_by('-v1s')[:20]))
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3n','speed','carloc').filter().order_by('-v3n')[:20]))
-    top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3s','speed','carloc').filter().order_by('-v3s')[:20]))
+    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20]))
+    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1s','speed','carloc').filter().order_by('-v1s')[:20]))
+    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v2s','speed','carloc').filter().order_by('-v2s')[:20]))
+    # top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3s','speed','carloc').filter().order_by('-v3s')[:20]))
     # datav1n = list(Backup_Frontend.objects.filter().order_by('-v1n','-v1s','-v3n','-v3s')[:20])
     df = pd.DataFrame(top_20_data)
-    df[4] = 20*['V1N'] + 20*['V1S'] + 20*['V3N'] +20*['V3S']
+    # df[4] = 20*['V1N'] + 20*['V1S'] + 20*['V3N'] +20*['V3S']
+    df[4] = 20*['V1N'] + 20*['V1S'] + 20*['V2S']
     df = df.sort_values(1, ascending=False)
 
     json_records = df.reset_index().to_json(orient ='records')

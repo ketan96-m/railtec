@@ -7,7 +7,8 @@ class Metratr116Filter(django_filters.FilterSet):
 	# speed__lt = django_filters.NumberFilter(field_name='speed', lookup_expr='speed__lt')
 
 	class Meta:
-		model = Metratr116
+		# model = Metratr116
+		model = Metratr116_reprocessed
 		fields = [
 		'tr_id',
 		'carloc',
