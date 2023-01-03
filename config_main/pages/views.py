@@ -25,7 +25,7 @@ from django.core import serializers
 from .forms import Metratr116Form
 from .filters import Metratr116Filter, CtaTableFilter
 import json
-
+from django.core.paginator import Paginator
 
 
 def register_login(request):
@@ -40,22 +40,22 @@ def register_login(request):
                 messages.success(request,"Account was created for " + user)
                 return render(request,'login.html',{'form':form})
             else:
-                print('Error', form.errors, request.POST)
+                # print('Error', form.errors, request.POST)
                 messages.error(request, 'Invalid form submission!')
                 messages.error(request, form.errors)
         if request.POST.get('submit') == 'sign_in':
-            print('Login attempt')
+            # print('Login attempt')
             username = request.POST['username']
             password = request.POST['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 if user.is_superuser:
-                    print('success', request.POST)
+                    # print('success', request.POST)
                     login(request,user)
                     fname = user.first_name
                     return redirect('dashboard')
                 else:
-                    print('ctasuccess', request.POST)
+                    # print('ctasuccess', request.POST)
                     login(request,user)
                     fname = user.first_name
                     return redirect('ctadashboard')
@@ -134,14 +134,30 @@ def TrainSpecFilterView(request):
     myFilter = Metratr116Filter(request.GET, queryset = all_data)
     train_data = myFilter.qs
     all_data = False
+
+    # Set the number of entries per page
+    paginator = Paginator(train_data, 30)
+
+    # Get the page number from the request's query parameters
+    page = request.GET.get('page')
+
+    # Get the specified page from the paginator
+    page_entries = paginator.get_page(page)
+
     for key in myFilter.data.keys():
         if myFilter.data[key] != '':
             all_data = True
             break
     if all_data:
-        context = {'train_data': train_data, 'myFilter' : myFilter}
+        context = {
+            'train_data': page_entries, 
+        'myFilter' : myFilter
+        }
     else:
-        context = {'train_data': [], 'myFilter' : myFilter}
+        context = {
+            'train_data': [], 
+        'myFilter' : myFilter
+        }
     return render(request, 'trainspec.html', context)
     
  
