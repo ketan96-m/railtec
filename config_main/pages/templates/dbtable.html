@@ -305,7 +305,7 @@
 	{% endif %}
 
 </table> -->
-
+<!-- {% csrf_token %} -->
 <table  float="right"  width=50% position = "relative">
 	{% if datav1n %}
 <tr>
@@ -333,6 +333,29 @@
 		<h1>No Data</h1>
 	{% endif %}
 
+</table>
+<table  float="right"  width=50% position = "relative">
+	{% if datav1n_car %}
+<tr>
+	<th>Train ID</th>
+	<th>Channel</th>
+	<th>Load</th>
+	<th>Speed</th>
+	<th>Vehicle Type</th>
+</tr>
+{% for x in datav1n_car %}
+		<tr>
+			<td>{{x.0}}</td>
+			<td>{{x.4}}</td>
+			<td>{{x.1}}</td>
+			<td>{{x.2}}</td>
+			<td>{{x.3}}</td>
+				</tr>	
+		{% endfor %}
+
+		{% else %}
+		<h1>No Data</h1>
+{% endif %}
 </table>
 
 <div class="sidebar">

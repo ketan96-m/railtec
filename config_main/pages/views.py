@@ -199,11 +199,17 @@ def DBTableView2(request):
     all_fields = [field.name for field in Metratr116_reprocessed._meta.get_fields()[2:3]]
     #get_all = Backup_Speed._meta.get_fields
     top_20_data = []
-    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20]))
-    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1s','speed','carloc').filter().order_by('-v1s')[:20]))
-    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v2s','speed','carloc').filter().order_by('-v2s')[:20]))
-    # top_20_data.extend(list(Backup_Frontend.objects.values_list('tr_id','v3s','speed','carloc').filter().order_by('-v3s')[:20]))
-    # datav1n = list(Backup_Frontend.objects.filter().order_by('-v1n','-v1s','-v3n','-v3s')[:20])
+    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1n','speed','carloc').filter(carloc = 'locomotive').order_by('-v1n')[:20]))
+    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1s','speed','carloc').filter(carloc = 'locomotive').order_by('-v1s')[:20]))
+    top_20_data.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v2s','speed','carloc').filter(carloc = 'locomotive').order_by('-v2s')[:20]))
+    
+    top_20_data_car = []
+    top_20_data_car.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1n','speed','carloc').filter(carloc = 'car').order_by('-v1n')[:20]))
+    top_20_data_car.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v1s','speed','carloc').filter(carloc = 'car').order_by('-v1s')[:20]))
+    top_20_data_car.extend(list(Metratr116_reprocessed.objects.values_list('tr_id','v2s','speed','carloc').filter(carloc = 'car').order_by('-v2s')[:20]))
+    
+
+
     df = pd.DataFrame(top_20_data)
     # df[4] = 20*['V1N'] + 20*['V1S'] + 20*['V3N'] +20*['V3S']
     df[4] = 20*['V1N'] + 20*['V1S'] + 20*['V2S']
@@ -213,12 +219,21 @@ def DBTableView2(request):
     datav1n = []
     datav1n = json.loads(json_records)[:20]
 
+    df1 = pd.DataFrame(top_20_data_car)
+    df1[4] = 20*['V1N'] + 20*['V1S'] + 20*['V2S']
+    df1 = df1.sort_values(1, ascending=False)
+
+    json_records = df1.reset_index().to_json(orient ='records')
+    datav1n_car = []
+    datav1n_car = json.loads(json_records)[:20]
+
     # datav1n = sorted(top_20_data, key = lambda x: x[1], reverse=True)[:20]
     # print(Backup_Frontend.objects.values_list('tr_id','v1n','speed','carloc').filter().order_by('-v1n')[:20])
     # print(len(datav1n))
     context = {
                 'all_fields' : all_fields,
                 'datav1n':datav1n,
+                'datav1n_car':datav1n_car
                 }
     # return render(request, 'dbtable.html', locals())
     return render(request, 'dbtable.html',context)
