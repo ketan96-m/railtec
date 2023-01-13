@@ -1,0 +1,9 @@
+staticfiles/
+*.pyc
+disha_backup/
+FTA_RailTEC/
+railtec/
+test/
+*.ppk
+*.cer
+*.pem
