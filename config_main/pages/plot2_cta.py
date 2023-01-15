@@ -30,11 +30,12 @@ def cumulative_cta():
     V1E = df["V1E_pks"]
     V1W = df["V1W_pks"]
     speed = df["Speed"]
-    
+    V2W = df["V2W_pks"]
+    V2E = df["V2E_pks"]
 
     fig = make_subplots(
-        rows=2,cols=2,
-        subplot_titles=("V1E Peaks", "V1W Peaks", "Speed"))
+        rows=3,cols=2,
+        subplot_titles=("V1E Peaks", "V1W Peaks", "Speed", "V1W v V2W","V1E v V2E"))
 
     fig.add_trace(go.Histogram(
         x=V1E,
@@ -77,6 +78,24 @@ def cumulative_cta():
         ),
     row=2,col=1)
 
+    fig.add_trace(go.Scatter(
+        x = V1W,
+        y = V2W,
+        name = 'V1W v V2W',
+        mode = 'markers',
+        marker_color='rgba(199, 10, 165, .9)',
+    ), 
+    row = 2, col = 2)
+
+    fig.add_trace(go.Scatter(
+        x = V1E,
+        y = V2E,
+        name = 'V1E v V2E',
+        mode = 'markers',
+        marker_color='rgba(199, 10, 165, .9)',
+    ), 
+    row = 3, col = 1)
+
     fig.update_xaxes(title_text = "Wheel Load (Kips)", row=1,col=1)
     fig.update_xaxes(title_text="Wheel Load (Kips)", row=1,col=2)
     fig.update_xaxes(title_text="Speed (MPH)", row=2,col=1)
@@ -89,7 +108,7 @@ def cumulative_cta():
         bargap=0.05, # gap between bars of adjacent location coordinates
         bargroupgap=0, # gap between bars of the same location coordinates
         width = 1000,
-        height = 700,
+        height = 900,
          
     )
     fig.show()
