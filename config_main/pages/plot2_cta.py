@@ -26,7 +26,8 @@ pd.set_option('precision',10)
 def cumulative_cta():
     db_connection_str = 'mysql+pymysql://admin:railtec123@railtec-db.cwguuce51yor.us-east-1.rds.amazonaws.com/db_railtec'
     db_connection = create_engine(db_connection_str)
-    df = pd.read_sql('SELECT * FROM cta_backup_10222022', con=db_connection)
+    # df = pd.read_sql('SELECT * FROM cta_backup_10222022', con=db_connection)
+    df = pd.read_sql('SELECT * FROM CTA_master_peaks', con=db_connection)
     V1E = df["V1E_pks"]
     V1W = df["V1W_pks"]
     speed = df["Speed"]
@@ -35,7 +36,7 @@ def cumulative_cta():
 
     fig = make_subplots(
         rows=3,cols=2,
-        subplot_titles=("V1E Peaks", "V1W Peaks", "Speed", "V1W v V2W","V1E v V2E"))
+        subplot_titles=("V1E Peaks", "V1W Peaks", "Speed", "V1W V2W Combined","V1E V2E Combined"))
 
     fig.add_trace(go.Histogram(
         x=V1E,
@@ -78,21 +79,31 @@ def cumulative_cta():
         ),
     row=2,col=1)
 
-    fig.add_trace(go.Scatter(
-        x = V1W,
-        y = V2W,
-        name = 'V1W v V2W',
-        mode = 'markers',
+    fig.add_trace(go.Histogram(
+        x = pd.concat([V1W,V2W]),
+        # y = V2W,
+        histfunc = "count",
+        name = 'V1W V2W Combined',
         marker_color='rgba(199, 10, 165, .9)',
+        opacity=0.75,
+        xbins=dict( # bins used for histogram
+        start=0,
+        size=0.5,
+        )
     ), 
     row = 2, col = 2)
 
-    fig.add_trace(go.Scatter(
-        x = V1E,
-        y = V2E,
-        name = 'V1E v V2E',
-        mode = 'markers',
+    fig.add_trace(go.Histogram(
+        x = pd.concat([V1E, V2E]),
+        # y = V2E,
+        histfunc = "count",
+        name = 'V1E V2E combined',
         marker_color='rgba(199, 10, 165, .9)',
+        opacity=0.75,
+        xbins=dict( # bins used for histogram
+        start=0,
+        size=0.5,
+        )
     ), 
     row = 3, col = 1)
 

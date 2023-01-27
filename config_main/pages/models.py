@@ -207,7 +207,8 @@ class Cta_backup(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'cta_backup_10222022'
+        # db_table = 'cta_backup_10222022'
+        db_table = 'CTA_master_peaks'
     
 
 class Metratr116_reprocessed(models.Model):

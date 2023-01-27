@@ -252,7 +252,18 @@ def TrainSpecCTA(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
     train_data = myFilter.qs
-    context = {'train_data': train_data, 'myFilter' : myFilter}
+
+    # Set the number of entries per page
+    paginator = Paginator(train_data, 30)
+
+    # Get the page number from the request's query parameters
+    page = request.GET.get('page')
+
+    # Get the specified page from the paginator
+    page_entries = paginator.get_page(page)
+
+    context = {'train_data': page_entries, #train_data, 
+    'myFilter' : myFilter}
     return render(request, 'ctatrainspec.html', context)
 
 
