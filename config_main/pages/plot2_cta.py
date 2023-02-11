@@ -35,70 +35,44 @@ def cumulative_cta():
     V2E = df["V2E_pks"]
 
     fig = make_subplots(
-        rows=3,cols=2,
-        subplot_titles=("V1E Peaks", "V1W Peaks", "Speed", "V1W V2W Combined","V1E V2E Combined"))
-
-    fig.add_trace(go.Histogram(
-        x=V1E,
-        histfunc = "count",
-        #histnorm = 'density',
-        name='V1E', # name used in legend and hover labels
-        marker_color='rgba(36, 231, 128)',
-        opacity=1.00,
-        xbins=dict( # bins used for histogram
-        size=0.5,
+        rows=3,cols=1,
+        subplot_titles=("Speed", "Vertical Loads -- West Rail","Vertical Loads -- East Rail"),
         )
-        #hover_data={'x':':.2f'},
-
-        ),
-    row=1,col=1)
-    fig.add_trace(go.Histogram(
-        x=V1W,
-        histfunc = "count",
-        name='V1W', # name used in legend and hover labels
-        marker_color='rgba(255, 153, 0)',
-        opacity=0.50,
-        xbins=dict( # bins used for histogram
-        start=0,
-        size=0.5,
-        )
-        ),
-    row=1,col=2)
-
+        
 
     fig.add_trace(go.Histogram(
         x=speed,
         histfunc = "count",
         name='Speed', # name used in legend and hover labels
-        marker_color='rgba(0,0,255)',
+        marker_color='rgba(255, 153, 0, 0.9)',
         opacity=0.75,
         xbins=dict( # bins used for histogram
         start=0,
         size=0.5,
         )
         ),
-    row=2,col=1)
+    row=1,col=1)
 
     fig.add_trace(go.Histogram(
         x = pd.concat([V1W,V2W]),
         # y = V2W,
         histfunc = "count",
-        name = 'V1W V2W Combined',
-        marker_color='rgba(199, 10, 165, .9)',
+        name = "Vertical Loads -- West Rail",
+        marker_color='rgba(255, 0, 0, 0.9)',
         opacity=0.75,
         xbins=dict( # bins used for histogram
         start=0,
         size=0.5,
         )
     ), 
-    row = 2, col = 2)
+    row = 2, col = 1)
 
     fig.add_trace(go.Histogram(
         x = pd.concat([V1E, V2E]),
         # y = V2E,
         histfunc = "count",
-        name = 'V1E V2E combined',
-        marker_color='rgba(199, 10, 165, .9)',
+        name = "Vertical Loads -- East Rail",
+        marker_color='rgba(0, 0, 255, 0.9)',
         opacity=0.75,
         xbins=dict( # bins used for histogram
         start=0,
@@ -107,19 +81,19 @@ def cumulative_cta():
     ), 
     row = 3, col = 1)
 
-    fig.update_xaxes(title_text = "Wheel Load (Kips)", row=1,col=1)
-    fig.update_xaxes(title_text="Wheel Load (Kips)", row=1,col=2)
-    fig.update_xaxes(title_text="Speed (MPH)", row=2,col=1)
+    fig.update_xaxes(title_text = "Wheel Load (Kips)", row=2,col=1)
+    fig.update_xaxes(title_text="Wheel Load (Kips)", row=3,col=1)
+    fig.update_xaxes(title_text="Speed (MPH)", row=1,col=1)
     fig.update_yaxes(title_text="Frequency",row=1,col=1)
-    fig.update_yaxes(title_text="Frequency",row=1,col=2)
     fig.update_yaxes(title_text="Frequency",row=2,col=1)
+    fig.update_yaxes(title_text="Frequency",row=3,col=1)
 
     fig.update_layout(
         title_text='Wheel Loads', # title of plot
         bargap=0.05, # gap between bars of adjacent location coordinates
         bargroupgap=0, # gap between bars of the same location coordinates
-        width = 1000,
-        height = 900,
+        width = 1200,
+        height = 1000,
          
     )
     fig.show()

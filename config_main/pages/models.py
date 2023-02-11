@@ -189,7 +189,8 @@ class Backup_Speed(models.Model):
     
 
 class Cta_backup(models.Model):
-    id = models.IntegerField(db_column = 'Unique_ID', primary_key = True)
+    # id = models.IntegerField(db_column = 'Unique_ID', primary_key = True)
+    id = models.CharField(db_column = 'Unique_ID',max_length=255, default="", primary_key = True)
     car_num = models.FloatField(db_column='Car_num')
     run_num = models.FloatField(db_column='Run_num')
     axle = models.FloatField(db_column='Axle')
@@ -203,7 +204,7 @@ class Cta_backup(models.Model):
     v2e = models.DecimalField(db_column='V2E_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
     v1w = models.DecimalField(db_column='V1W_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
     v1e = models.DecimalField(db_column='V1E_pks', max_digits=4, decimal_places=2)  # Field name made lowercase.
-    
+    train_num = models.CharField(db_column='Train_num', max_length=255, default="")
 
     class Meta:
         managed = False

@@ -37,14 +37,16 @@ class CtaTableFilter(django_filters.FilterSet):
 		fields = [
 		'train_id',
 		'axle',
-		'speed'
+		'speed',
+		'train_num'
 		]
 		fields = {
 			'train_id':['exact'],
 			'axle':['exact'],
-			'speed':['lte','gte']
+			'speed':['lte','gte'],
+			'train_num':['exact']
 		}
-
+	
 		
 	def __init__(self, *args, **kwargs):
 		super(CtaTableFilter, self).__init__(*args, **kwargs)

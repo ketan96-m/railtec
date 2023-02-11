@@ -81,10 +81,10 @@
 <div class="row">
 	<div class = "col-md">
 		<div class = "card card-body">
-			<table>
+			<table width = "100%">
 				<tr>
 					<th>V1E</th>
-					<th>V1W</th>
+					<th >V1W</th>
 					<th>V2E</th>
 					<th>V2W</th>
 					<th>L1E</th>
@@ -92,11 +92,11 @@
 					<th>L2E</th>
 					<th>L2W</th>
 					<th>Speed</th>
-					<th>Train Date</th>
+					<th width = "50%">Train Date</th>
 					<th>Axle</th>
 					<th>Car Num</th>
 					<th>Run Num</th>
-					<th>Unique ID</th>
+					<th>Train Num</th>
 				</tr>
 			
 				{% for traindata in train_data %}
@@ -114,7 +114,7 @@
 					<td>{{traindata.axle}}</td>
 					<td>{{traindata.car_num}}</td>
 					<td>{{traindata.run_num}}</td>
-					<td>{{traindata.unique}}</td>
+					<td>{{traindata.train_num}}</td>
 				</tr>
 
 				{% endfor %}	
