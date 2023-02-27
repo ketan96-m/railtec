@@ -26,6 +26,8 @@ from .forms import Metratr116Form
 from .filters import Metratr116Filter, CtaTableFilter
 import json
 from django.core.paginator import Paginator
+import datetime
+
 
 
 def register_login(request):
@@ -40,26 +42,27 @@ def register_login(request):
                 messages.success(request,"Account was created for " + user)
                 return render(request,'login.html',{'form':form})
             else:
-                # print('Error', form.errors, request.POST)
+                print('Error', form.errors, request.POST)
                 messages.error(request, 'Invalid form submission!')
                 messages.error(request, form.errors)
         if request.POST.get('submit') == 'sign_in':
-            # print('Login attempt')
+            print('Login attempt')
             username = request.POST['username']
             password = request.POST['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 if user.is_superuser:
-                    # print('success', request.POST)
+                    print('success', request.POST)
                     login(request,user)
                     fname = user.first_name
-                    return redirect('dashboard')
+                    return redirect('ctadashboard')
                 else:
-                    # print('ctasuccess', request.POST)
+                    print('ctasuccess', request.POST)
                     login(request,user)
                     fname = user.first_name
                     return redirect('ctadashboard')
             else:
+                print("Error", request)
                 messages.error(request, 'Wrong Username or Password')
                 return render(request,'login.html',{})
     else:
@@ -159,6 +162,8 @@ def TrainSpecFilterView(request):
         'myFilter' : myFilter
         }
     return render(request, 'trainspec.html', context)
+
+
     
  
 @login_required
@@ -238,7 +243,7 @@ def DBTableView2(request):
     # return render(request, 'dbtable.html', locals())
     return render(request, 'dbtable.html',context)
 
-
+# @login_required
 class CTADashboard(TemplateView): 
     template_name = 'ctadashboard.html'
     def get_context_data(self, **kwargs):
@@ -248,6 +253,7 @@ class CTADashboard(TemplateView):
         context['plotcta'] = plot2_cta.cumulative_cta()
         return context
 
+@login_required
 def TrainSpecCTA(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
@@ -266,8 +272,20 @@ def TrainSpecCTA(request):
     'myFilter' : myFilter}
     return render(request, 'ctatrainspec.html', context)
 
+def ExportCSV(request):
+    all_data = Cta_backup.objects.all()
+    myFilter = CtaTableFilter(request.GET, queryset = all_data)
+    train_data = pd.DataFrame(myFilter.qs.values())
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{datetime.datetime.now()}.csv"'
+    train_data.to_csv(response, columns = [
+        "car_num",	"run_num",	"axle",	"train_id",	
+        "speed"	,"l2w"	,"l2e"	,"l1w"	,"l1e"	,"v2w"	,"v2e"	,"v1w"	,"v1e"	,"train_num"
+    ], index = False)
+    return response
 
 
+@login_required
 def CTADBTable(request):
     
     all_fields = [field.name for field in Cta_backup._meta.get_fields()[2:3]]

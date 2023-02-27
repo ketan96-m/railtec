@@ -72,11 +72,18 @@
 			<form method="GET" >
 				{{ myFilter.form.as_p }}
 				<button class = "btn btn-primary" type="submit">Search</button>
+				<!-- <button class = "btn btn-secondary">Export CSV</button> -->
 			</form>
 		</div>
 	</div>
 </div>
-
+<div class = "row">
+	<div class = "col">
+		<a href="{%url 'export-csv' %}?{{request.GET.urlencode}}">
+		<button class = "btn btn-secondary">Export CSV</button>
+	</a>
+</div>
+</div>
 
 <div class="row" >
 	<div class = "col-md">

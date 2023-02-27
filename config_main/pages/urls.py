@@ -18,6 +18,7 @@ urlpatterns = [
     path('ctadashboard/', CTADashboard.as_view(), name = 'ctadashboard'),
     path('ctatrainspec/', views.TrainSpecCTA, name = 'ctatrainspec'),
     path('ctadbtable/', views.CTADBTable, name = 'ctadbtable'),
+    path('export-csv/', views.ExportCSV, name='export-csv'),
     #url(r'^(?P<user>\w+)/(?P<slug>\w+)/$', views.PageView.as_view(), name='page'),
     #path('', LoginPageView.as_view(), name='login'),
     
