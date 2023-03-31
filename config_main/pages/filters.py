@@ -1,6 +1,7 @@
 import django_filters
 
 from .models import *
+from django import forms
 
 class Metratr116Filter(django_filters.FilterSet):
 	# speed__gt = django_filters.NumberFilter(field_name='speed', lookup_expr='speed__gt')
@@ -44,9 +45,11 @@ class CtaTableFilter(django_filters.FilterSet):
 			'train_id':['exact'],
 			'axle':['exact'],
 			'speed':['lte','gte'],
-			'train_num':['exact']
+			'train_num':['contains']
 		}
-	
+		widgets = {
+         'speed': forms.TextInput(attrs={'type': 'range'})
+         }
 		
 	def __init__(self, *args, **kwargs):
 		super(CtaTableFilter, self).__init__(*args, **kwargs)

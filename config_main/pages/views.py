@@ -9,6 +9,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .decorators import allowed_users
 
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+from plotly.offline import plot
+
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 
@@ -38,7 +42,7 @@ def register_login(request):
             if form.is_valid():
                 form.save()
                 user = form.cleaned_data['username']
-                print('Account was created',user)
+                print('Account was created')
                 messages.success(request,"Account was created for " + user)
                 return render(request,'login.html',{'form':form})
             else:
@@ -52,17 +56,17 @@ def register_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 if user.is_superuser:
-                    print('success', request.POST)
+                    print('success')
                     login(request,user)
                     fname = user.first_name
                     return redirect('ctadashboard')
                 else:
-                    print('ctasuccess', request.POST)
+                    print('ctasuccess')
                     login(request,user)
                     fname = user.first_name
                     return redirect('ctadashboard')
             else:
-                print("Error", request)
+                print("Error", form.errors)
                 messages.error(request, 'Wrong Username or Password')
                 return render(request,'login.html',{})
     else:
@@ -246,12 +250,12 @@ def DBTableView2(request):
 # @login_required
 class CTADashboard(TemplateView): 
     template_name = 'ctadashboard.html'
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(CTADashboard, self).get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    #     # Call the base implementation first to get a context
+    #     context = super(CTADashboard, self).get_context_data(**kwargs)
         
-        context['plotcta'] = plot2_cta.cumulative_cta()
-        return context
+    #     context['plotcta'] = plot2_cta.cumulative_cta()
+    #     return context
 
 @login_required
 def TrainSpecCTA(request):
@@ -276,6 +280,7 @@ def ExportCSV(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
     train_data = pd.DataFrame(myFilter.qs.values())
+    print('Export csv',train_data.shape)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="{datetime.datetime.now()}.csv"'
     train_data.to_csv(response, columns = [
@@ -284,6 +289,32 @@ def ExportCSV(request):
     ], index = False)
     return response
 
+
+def MakeSearchPlot(request):
+    all_data = Cta_backup.objects.all()
+    myFilter = CtaTableFilter(request.GET, queryset = all_data)
+    train_data = pd.DataFrame(myFilter.qs.values())
+    print('Export csv',train_data.shape)
+    channels = ["l2w"	,"l2e"	,"l1w"	,"l1e"	,"v2w"	,"v2e"	,"v1w"	,"v1e"]
+
+    fig = make_subplots(rows=len(channels), cols=1)
+
+    for i in range(len(channels)):
+        fig.append_trace(go.Scatter(
+            x=train_data.index,
+            y=train_data[channels[i]],
+            # yaxis = channels[i],
+            name = str.upper(channels[i])
+        ), row=i+1, col=1)
+        fig.update_xaxes(title_text=f"Axles \n{str.upper(channels[i])}", row=i+1, col=1)
+        fig.update_yaxes(title_text='Load(Kips)',row=i+1, col=1)
+
+    fig.update_layout(height=1500, width=1000, title_text="Load Plots")
+    # plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+    plot_div = fig.to_html()
+    context = {'search_plot':plot_div}
+    return render(request, 'searchplot.html', context)
+    
 
 @login_required
 def CTADBTable(request):
