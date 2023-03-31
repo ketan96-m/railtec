@@ -38,36 +38,36 @@ def register_login(request):
     if request.method=='POST':
         form = UserCreationForm(request.POST)
         if request.POST.get('submit') == 'sign_up':
-            print('Register')
+            # print('Register')
             if form.is_valid():
                 form.save()
                 user = form.cleaned_data['username']
-                print('Account was created')
+                # print('Account was created')
                 messages.success(request,"Account was created for " + user)
                 return render(request,'login.html',{'form':form})
             else:
-                print('Error', form.errors, request.POST)
-                messages.error(request, 'Invalid form submission!')
-                messages.error(request, form.errors)
+                # print('Error', form.errors, request.POST)
+                messages.info(request, 'Invalid form submission!')
+                messages.info(request, form.errors)
         if request.POST.get('submit') == 'sign_in':
-            print('Login attempt')
+            # print('Login attempt')
             username = request.POST['username']
             password = request.POST['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 if user.is_superuser:
-                    print('success')
+                    # print('success')
                     login(request,user)
                     fname = user.first_name
                     return redirect('ctadashboard')
                 else:
-                    print('ctasuccess')
+                    # print('ctasuccess')
                     login(request,user)
                     fname = user.first_name
                     return redirect('ctadashboard')
             else:
-                print("Error", form.errors)
-                messages.error(request, 'Wrong Username or Password')
+                # print("Error", form.errors)
+                messages.info(request, 'Wrong Username or Password')
                 return render(request,'login.html',{})
     else:
         form = UserCreationForm()
