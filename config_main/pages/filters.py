@@ -47,6 +47,7 @@ class CtaTableFilter(django_filters.FilterSet):
 			'speed':['lte','gte'],
 			'train_num':['contains']
 		}
+
 		widgets = {
          'speed': forms.TextInput(attrs={'type': 'range'})
          }
@@ -57,3 +58,4 @@ class CtaTableFilter(django_filters.FilterSet):
 		self.filters['axle'].label="Axle Number"
 		self.filters['speed__lte'].label = "Speed (max)"
 		self.filters['speed__gte'].label = "Speed (min)"
+		self.filters['train_num__contains'].label = "Train Number"

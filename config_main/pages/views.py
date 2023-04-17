@@ -280,7 +280,6 @@ def ExportCSV(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
     train_data = pd.DataFrame(myFilter.qs.values())
-    print('Export csv',train_data.shape)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="{datetime.datetime.now()}.csv"'
     train_data.to_csv(response, columns = [
@@ -294,23 +293,35 @@ def MakeSearchPlot(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
     train_data = pd.DataFrame(myFilter.qs.values())
-    print('Export csv',train_data.shape)
     channels = ["l2w"	,"l2e"	,"l1w"	,"l1e"	,"v2w"	,"v2e"	,"v1w"	,"v1e"]
+    
 
-    fig = make_subplots(rows=len(channels), cols=1)
-
+    fig = make_subplots(rows=len(channels), cols=1,
+                        subplot_titles = ['Lateral Loads 2 (West)', 'Lateral Loads 2 (East)',\
+                                          'Lateral Loads 1 (West)', 'Lateral Loads 1 (East)',\
+                                            'Vertical Loads 2 (West)', 'Vertical Loads 2 (East)',\
+                                            'Vertical Loads 1 (West)', 'Vertical Loads 1 (East)'  ])
+    min_y = float('inf')
+    max_y = float('-inf')
     for i in range(len(channels)):
         fig.append_trace(go.Scatter(
-            x=train_data.index,
+            x=train_data.index+1,
             y=train_data[channels[i]],
+            marker= dict(
+            color='Red'),
+            mode='markers',
+            hovertemplate="Load: %{y:.2f} kips",
             # yaxis = channels[i],
-            name = str.upper(channels[i])
+            name = str.upper(channels[i]),
+            
         ), row=i+1, col=1)
-        fig.update_xaxes(title_text=f"Axles \n{str.upper(channels[i])}", row=i+1, col=1)
+        min_y = min(train_data[channels[i]].min(), min_y)
+        max_y = max(train_data[channels[i]].max(), max_y)
         fig.update_yaxes(title_text='Load(Kips)',row=i+1, col=1)
 
-    fig.update_layout(height=1500, width=1000, title_text="Load Plots")
-    # plot_div = plot(fig, output_type='div', include_plotlyjs=False)
+    fig.update_layout(height=1500, width=1000, title_text="Load Plots",showlegend=False)
+    fig.update_xaxes(type='category')
+    fig.update_yaxes(range = (0, max_y+1))
     plot_div = fig.to_html()
     context = {'search_plot':plot_div}
     return render(request, 'searchplot.html', context)
