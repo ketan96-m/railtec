@@ -129,12 +129,12 @@ class VerticalPageView(TemplateView):
         context['plot'] = plot1.vertical_plot()
         return context
 
-
+@login_required(login_url='/')
 def TrainSpecView(request):  
     train_data = Backup_Speed.objects.all()
     return render(request, 'trainspec.html', locals())    
 
-
+@login_required(login_url='/')
 def TrainSpecFilterView(request):
     # all_data = Backup_Speed.objects.all()
     all_data = Metratr116_reprocessed.objects.all()
@@ -143,7 +143,7 @@ def TrainSpecFilterView(request):
     all_data = False
 
     # Set the number of entries per page
-    paginator = Paginator(train_data, 30)
+    paginator = Paginator(train_data, 32)
 
     # Get the page number from the request's query parameters
     page = request.GET.get('page')
@@ -158,19 +158,19 @@ def TrainSpecFilterView(request):
     if all_data:
         context = {
             'train_data': page_entries, 
-        'myFilter' : myFilter
+            'myFilter' : myFilter
         }
     else:
         context = {
             'train_data': [], 
-        'myFilter' : myFilter
+            'myFilter' : myFilter
         }
     return render(request, 'trainspec.html', context)
 
 
     
  
-@login_required
+@login_required(login_url='/')
 def DBTableView(request):
     #data = DummyTable_20220508.objects.all()
     #data = Backup_Speed.objects.order_by('-v1n', '-v1s', '-v3s', '-v3n')[:20]
@@ -200,7 +200,7 @@ def DBTableView(request):
 
     return render(request, 'dbtable.html', context)
 
-@login_required
+@login_required(login_url='/')
 def DBTableView2(request):
     #data = DummyTable_20220508.objects.all()
     #data = Backup_Speed.objects.order_by('-v1n', '-v1s', '-v3s', '-v3n')[:20]
@@ -250,6 +250,10 @@ def DBTableView2(request):
 # @login_required
 class CTADashboard(TemplateView): 
     template_name = 'ctadashboard.html'
+
+@login_required(login_url='/')
+def CTADashboard(request):
+    return render(request, 'ctadashboard.html')
     # def get_context_data(self, **kwargs):
     #     # Call the base implementation first to get a context
     #     context = super(CTADashboard, self).get_context_data(**kwargs)
@@ -257,14 +261,14 @@ class CTADashboard(TemplateView):
     #     context['plotcta'] = plot2_cta.cumulative_cta()
     #     return context
 
-@login_required
+@login_required(login_url='/')
 def TrainSpecCTA(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
     train_data = myFilter.qs
 
     # Set the number of entries per page
-    paginator = Paginator(train_data, 30)
+    paginator = Paginator(train_data, 32)
 
     # Get the page number from the request's query parameters
     page = request.GET.get('page')
@@ -276,6 +280,7 @@ def TrainSpecCTA(request):
     'myFilter' : myFilter}
     return render(request, 'ctatrainspec.html', context)
 
+@login_required(login_url='/ctatrainspec')
 def ExportCSV(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
@@ -288,7 +293,7 @@ def ExportCSV(request):
     ], index = False)
     return response
 
-
+@login_required(login_url='/ctatrainspec/')
 def MakeSearchPlot(request):
     all_data = Cta_backup.objects.all()
     myFilter = CtaTableFilter(request.GET, queryset = all_data)
@@ -300,10 +305,14 @@ def MakeSearchPlot(request):
                         subplot_titles = ['Lateral Loads 2 (West)', 'Lateral Loads 2 (East)',\
                                           'Lateral Loads 1 (West)', 'Lateral Loads 1 (East)',\
                                             'Vertical Loads 2 (West)', 'Vertical Loads 2 (East)',\
-                                            'Vertical Loads 1 (West)', 'Vertical Loads 1 (East)'  ])
+                                            'Vertical Loads 1 (West)', 'Vertical Loads 1 (East)' ,
+                                            ])
     min_y = float('inf')
     max_y = float('-inf')
-    for i in range(len(channels)):
+    max_lateral = float('-inf')
+    max_vertical = float('-inf')
+
+    for i in range(0,4):
         fig.append_trace(go.Scatter(
             x=train_data.index+1,
             y=train_data[channels[i]],
@@ -317,17 +326,37 @@ def MakeSearchPlot(request):
         ), row=i+1, col=1)
         min_y = min(train_data[channels[i]].min(), min_y)
         max_y = max(train_data[channels[i]].max(), max_y)
-        fig.update_yaxes(title_text='Load(Kips)',row=i+1, col=1)
+        max_lateral = max(train_data[channels[i]].max(), max_lateral)
+        fig.update_yaxes(title_text='Load(Kips)',row=i+1, col=1, range = (0, max_lateral+1))
 
-    fig.update_layout(height=1500, width=1000, title_text="Load Plots",showlegend=False)
+    for i in range(4, 8):
+        fig.append_trace(go.Scatter(
+            x=train_data.index+1,
+            y=train_data[channels[i]],
+            marker= dict(
+            color='Red'),
+            mode='markers',
+            hovertemplate="Load: %{y:.2f} kips",
+            # yaxis = channels[i],
+            name = str.upper(channels[i]),
+            
+        ), row=i+1, col=1)
+        min_y = min(train_data[channels[i]].min(), min_y)
+        max_y = max(train_data[channels[i]].max(), max_y)
+        max_vertical = max(train_data[channels[i]].max(), max_vertical)
+        fig.update_yaxes(title_text='Load(Kips)',row=i+1, col=1, range = (0, max_vertical+1))
+
+
+
+    fig.update_layout(height=2000, width=1500, title_text="Load Plots",showlegend=False)
     fig.update_xaxes(type='category')
-    fig.update_yaxes(range = (0, max_y+1))
+
     plot_div = fig.to_html()
     context = {'search_plot':plot_div}
     return render(request, 'searchplot.html', context)
     
 
-@login_required
+@login_required(login_url='/')
 def CTADBTable(request):
     
     all_fields = [field.name for field in Cta_backup._meta.get_fields()[2:3]]
@@ -354,4 +383,6 @@ def CTADBTable(request):
     return render(request, 'ctadbtable.html', locals())
     
 
-
+def logout_view(request):
+    logout(request)
+    return render(request, 'login.html')

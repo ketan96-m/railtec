@@ -15,7 +15,9 @@ urlpatterns = [
     path('vertical/', VerticalPageView.as_view(), name='vertical'),
     path('dbtable/', views.DBTableView2, name = 'dbtable'),
     path('trainspec/', views.TrainSpecFilterView, name = 'trainspec'),
-    path('ctadashboard/', CTADashboard.as_view(), name = 'ctadashboard'),
+
+    path('ctadashboard/', views.CTADashboard, name = 'ctadashboard'),
+    # path('ctadashboard/', CTADashboard.as_view(), name = 'ctadashboard'),
     path('ctatrainspec/', views.TrainSpecCTA, name = 'ctatrainspec'),
     path('ctadbtable/', views.CTADBTable, name = 'ctadbtable'),
     path('export-csv/', views.ExportCSV, name='export-csv'),

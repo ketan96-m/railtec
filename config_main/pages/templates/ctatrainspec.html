@@ -90,10 +90,16 @@
 							<div class="form-group col-md-6">
 							{{ myFilter.form.axle|as_crispy_field}}
 							</div>
+							<div class="form-group col-md-6">
+								{{ myFilter.form.train_num__contains|as_crispy_field}}
+							</div>
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-6">
-							{{ myFilter.form.train_num__contains|as_crispy_field}}
+								{{ myFilter.form.car_num|as_crispy_field}}
+							</div>
+							<div class="form-group col-md-6">
+								{{ myFilter.form.run_num|as_crispy_field}}
 							</div>
 						</div>
 						<!-- {{ myFilter.form.as_p }} -->

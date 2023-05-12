@@ -39,13 +39,17 @@ class CtaTableFilter(django_filters.FilterSet):
 		'train_id',
 		'axle',
 		'speed',
-		'train_num'
+		'train_num',
+		'car_num',
+		'run_num'
 		]
 		fields = {
 			'train_id':['exact'],
 			'axle':['exact'],
 			'speed':['lte','gte'],
-			'train_num':['contains']
+			'train_num':['contains'],
+			'car_num':['exact'],
+			'run_num':['exact']
 		}
 
 		widgets = {
@@ -59,3 +63,5 @@ class CtaTableFilter(django_filters.FilterSet):
 		self.filters['speed__lte'].label = "Speed (max)"
 		self.filters['speed__gte'].label = "Speed (min)"
 		self.filters['train_num__contains'].label = "Train Number"
+		self.filters['car_num'].label = "Car Number"
+		self.filters['run_num'].label = "Run Number"
