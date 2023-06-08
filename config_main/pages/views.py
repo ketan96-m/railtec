@@ -327,6 +327,8 @@ def MakeSearchPlot(request):
         min_y = min(train_data[channels[i]].min(), min_y)
         max_y = max(train_data[channels[i]].max(), max_y)
         max_lateral = max(train_data[channels[i]].max(), max_lateral)
+
+    for i in range(0,4):
         fig.update_yaxes(title_text='Load(Kips)',row=i+1, col=1, range = (0, max_lateral+1))
 
     for i in range(4, 8):
@@ -344,6 +346,7 @@ def MakeSearchPlot(request):
         min_y = min(train_data[channels[i]].min(), min_y)
         max_y = max(train_data[channels[i]].max(), max_y)
         max_vertical = max(train_data[channels[i]].max(), max_vertical)
+    for i in range(4,8):
         fig.update_yaxes(title_text='Load(Kips)',row=i+1, col=1, range = (0, max_vertical+1))
 
 
