@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .decorators import allowed_users
+from django.contrib.auth.models import Group
 
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
@@ -35,6 +36,7 @@ import datetime
 
 
 def register_login(request):
+    users_in_group = Group.objects.get(name="CTA").user_set.all()
     if request.method=='POST':
         form = UserCreationForm(request.POST)
         if request.POST.get('submit') == 'sign_up':
@@ -55,16 +57,16 @@ def register_login(request):
             password = request.POST['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                if user.is_superuser:
+                if user.is_superuser or user in users_in_group:
                     # print('success')
                     login(request,user)
                     fname = user.first_name
                     return redirect('ctadashboard')
-                else:
-                    # print('ctasuccess')
-                    login(request,user)
-                    fname = user.first_name
-                    return redirect('ctadashboard')
+                # else:
+                #     # print('ctasuccess')
+                #     login(request,user)
+                #     fname = user.first_name
+                #     return redirect('ctadashboard')
             else:
                 # print("Error", form.errors)
                 messages.info(request, 'Wrong Username or Password')
